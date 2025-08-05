@@ -8,5 +8,6 @@ namespace Vehicle.Models;
 
 public class VehicleRegistration
 {
+    public int Id { get; set; }
     public string RegistrationNumber { get; set; }
 }
