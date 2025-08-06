@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Reporsitory\" />
     <Folder Include="Service\" />
   </ItemGroup>
 

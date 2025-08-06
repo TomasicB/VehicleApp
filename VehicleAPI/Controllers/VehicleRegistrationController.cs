@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL;
-using Vehicle.Models;
+using Vehicle.DAL.Context;
+using Vehicle.DAL.Entities;
 
 namespace VehicleAPI.Controllers;
 
@@ -15,7 +15,7 @@ public class VehicleRegistrationController : ControllerBase
     public VehicleRegistrationController(VehicleDbContext context) => _context = context;
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleRegistration>>> GetRegistrations()
+    public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrations()
     {
         var registration = await _context.VehicleRegistration
             .ToListAsync();
@@ -24,7 +24,7 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("{number}")]
-    public async Task<ActionResult<IEnumerable<VehicleRegistration>>> GetRegistrationById(string number)
+    public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrationById(string number)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
@@ -34,7 +34,7 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsRegistration([FromBody] VehicleRegistration registration, int ModelId, int EngineId, int OwnerId)
+    public async Task<ActionResult> InsRegistration([FromBody] VehicleRegistrationDTO registration, int ModelId, int EngineId, int OwnerId)
     {
         if (registration == null)
             return BadRequest("Registration is not entered.");
@@ -76,7 +76,7 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistration UpdRegistration)
+    public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistrationDTO UpdRegistration)
     {
         if (id != UpdRegistration.Id)
             return BadRequest("Registration ID mismatch");

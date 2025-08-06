@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Vehicle.DAL;
-using Vehicle.Models;
+using Vehicle.DAL.Context;
+using Vehicle.DAL.Entities;
 
 namespace VehicleAPI.Controllers;
 
@@ -16,7 +16,7 @@ public class VehicleOwnerController : ControllerBase
     public VehicleOwnerController(VehicleDbContext context) => _context = context;
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleOwner>>> GetOwners()
+    public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwners()
     {
         var owner = await _context.VehicleOwner
             .ToListAsync();
@@ -25,7 +25,7 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleOwner>>> GetOwnerById(string name)
+    public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwnerById(string name)
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.FirstName == name || o.LastName == name)
@@ -35,7 +35,7 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsOwner([FromBody] VehicleOwner o)
+    public async Task<ActionResult> InsOwner([FromBody] VehicleOwnerDTO o)
     {
         if (o == null)
         {
@@ -65,7 +65,7 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwner UpdOwner)
+    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerDTO UpdOwner)
     {
         if (id != UpdOwner.Id)
         {

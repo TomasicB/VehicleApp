@@ -1,6 +1,6 @@
 using System;
-using Vehicle.DAL;
 using Microsoft.EntityFrameworkCore;
+using Vehicle.DAL.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 

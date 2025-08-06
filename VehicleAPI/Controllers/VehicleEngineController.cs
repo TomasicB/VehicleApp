@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL;
-using Vehicle.Models;
+using Vehicle.DAL.Context;
+using Vehicle.DAL.Entities;
 
 namespace VehicleAPI.Controllers;
 

@@ -1,0 +1,12 @@
+﻿using Vehicle.Models.Common;
+
+namespace Vehicle.Models.DTO;
+
+public class VehicleEngineDTO : IVehicleEngine
+{
+    public int Id { get; set; }
+
+    public required string Type { get; set; }
+
+    public string Abrv { get; set; } = string.Empty;
+}

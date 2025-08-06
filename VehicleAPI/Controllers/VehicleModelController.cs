@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL;
-using Vehicle.Models;
+using Vehicle.DAL.Context;
+using Vehicle.DAL.Entities;
 
 namespace VehicleAPI.Controllers;
 
@@ -15,7 +15,7 @@ public class VehicleModelController : ControllerBase
     public VehicleModelController(VehicleDbContext context) => _context = context;
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleModel>>> GetModels()
+    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModels()
     {
         var model = await _context.VehicleModel
             .ToListAsync();
@@ -24,7 +24,7 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleModel>>> GetModelById(string name)
+    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModelById(string name)
     {
         var model = await _context.VehicleModel
             .Where(m => m.Name == name || m.Abrv == name)
@@ -34,7 +34,7 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsModel([FromBody] VehicleModel model, int makeid)
+    public async Task<ActionResult> InsModel([FromBody] VehicleModelDTO model, int makeid)
     {
         if (model == null)
             return BadRequest("Model is not entered.");
@@ -66,7 +66,7 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModel UpdModel)
+    public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModelDTO UpdModel)
     {
         if (id != UpdModel.Id)
             return BadRequest("Model ID mismatch");

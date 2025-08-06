@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL;
-using Vehicle.Models;
+using Vehicle.DAL.Context;
+using Vehicle.DAL.Entities;
 
 namespace VehicleAPI.Controllers;
 
@@ -15,7 +15,7 @@ public class VehicleMakeController : ControllerBase
     public VehicleMakeController(VehicleDbContext context) => _context = context;
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleMake>>> GetMake()
+    public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMake()
     {
         var make = await _context.VehicleMake
             .ToListAsync();
@@ -24,7 +24,7 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleMake>>> GetMakeById(string name)
+    public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMakeById(string name)
     {
         var make = await _context.VehicleMake
             .Where(m => m.Name == name || m.Abrv == name)
@@ -34,7 +34,7 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsMake([FromBody] VehicleMake m)
+    public async Task<ActionResult> InsMake([FromBody] VehicleMakeDTO m)
     {
         if (m == null)
             return BadRequest("Make is not entered.");
@@ -60,7 +60,7 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdMake(int id, [FromBody] VehicleMake UpdMake)
+    public async Task<ActionResult> UpdMake(int id, [FromBody] VehicleMakeDTO UpdMake)
     {
         if (id != UpdMake.Id)
             return BadRequest("Make ID mismatch");
