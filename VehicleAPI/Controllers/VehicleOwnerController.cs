@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.DTO;
 
 namespace VehicleAPI.Controllers;
 
@@ -38,11 +39,16 @@ public class VehicleOwnerController : ControllerBase
     public async Task<ActionResult> InsOwner([FromBody] VehicleOwnerDTO o)
     {
         if (o == null)
-        {
             return BadRequest("Owner is not entered.");
-        }
 
-        _context.VehicleOwner.Add(o);
+        var owner = new VehicleOwner()
+        {
+            LastName = o.LastName,
+            FirstName = o.FirstName,
+            DOB = o.DOB
+        };
+
+        _context.VehicleOwner.Add(owner);
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
@@ -54,9 +60,7 @@ public class VehicleOwnerController : ControllerBase
         var o = await _context.VehicleOwner.FindAsync(id);
 
         if (o == null)
-        {
             return NotFound();
-        }
 
         _context.VehicleOwner.Remove(o);
         await _context.SaveChangesAsync();
@@ -67,16 +71,9 @@ public class VehicleOwnerController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerDTO UpdOwner)
     {
-        if (id != UpdOwner.Id)
-        {
-            return BadRequest("Owner ID mismatch");
-        }
-
         var o = await _context.VehicleOwner.FindAsync(id);
         if (o == null)
-        {
             return NotFound();
-        }
 
         o.FirstName= UpdOwner.FirstName;
         o.LastName= UpdOwner.LastName;
@@ -85,8 +82,7 @@ public class VehicleOwnerController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Owner data updated.\r\n" +
-            "New data: {3}\t{4}\t{5}",  
-            UpdOwner.Id, UpdOwner.FirstName, UpdOwner.LastName));
+            "New data: {0}\t{1}",  
+            UpdOwner.FirstName, UpdOwner.LastName));
     }
-
 }

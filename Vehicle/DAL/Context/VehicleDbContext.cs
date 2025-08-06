@@ -10,13 +10,13 @@ public class VehicleDbContext : DbContext
     {
     }
 
-    public DbSet<VehicleOwnerDTO> VehicleOwner { get; set; }
+    public DbSet<VehicleOwner> VehicleOwner { get; set; }
 
-    public DbSet<VehicleMakeDTO> VehicleMake { get; set; }
+    public DbSet<VehicleMake> VehicleMake { get; set; }
 
-    public DbSet<VehicleModelDTO> VehicleModel { get; set; }
+    public DbSet<VehicleModel> VehicleModel { get; set; }
 
     public DbSet<VehicleEngine> VehicleEngine { get; set; }
 
-    public DbSet<VehicleRegistrationDTO> VehicleRegistration { get; set; }
+    public DbSet<VehicleRegistration> VehicleRegistration { get; set; }
 }

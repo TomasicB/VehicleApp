@@ -1,6 +1,6 @@
 ﻿namespace Vehicle.DAL.Entities;
 
-public class VehicleOwnerDTO
+public class VehicleOwner
 {
     public int Id { get; set; }
 

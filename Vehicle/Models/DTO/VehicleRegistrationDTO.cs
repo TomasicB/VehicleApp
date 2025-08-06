@@ -4,8 +4,6 @@ namespace Vehicle.Models.DTO;
 
 public class VehicleRegistrationDTO : IVehicleRegistration
 {
-    public int Id { get; set; }
-
     public required string RegistrationNumber { get; set; }
 
     public int VehicleModelId { get; set; }

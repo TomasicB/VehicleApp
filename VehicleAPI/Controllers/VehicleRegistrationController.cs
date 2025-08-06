@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.DTO;
 
 namespace VehicleAPI.Controllers;
 
@@ -34,9 +35,9 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsRegistration([FromBody] VehicleRegistrationDTO registration, int ModelId, int EngineId, int OwnerId)
+    public async Task<ActionResult> InsRegistration([FromBody] VehicleRegistrationDTO r, int ModelId, int EngineId, int OwnerId)
     {
-        if (registration == null)
+        if (r == null)
             return BadRequest("Registration is not entered.");
 
         var model = await _context.VehicleModel.FindAsync(ModelId);
@@ -51,9 +52,13 @@ public class VehicleRegistrationController : ControllerBase
         if (owner == null)
             return BadRequest("Owner is not entered.");
 
-        registration.VehicleModelId = model.Id;
-        registration.VehicleEngineId = engine.Id;
-        registration.VehicleOwnerId = owner.Id;
+        var registration = new VehicleRegistration()
+        {
+            RegistrationNumber = r.RegistrationNumber,
+            VehicleModelId = model.Id,
+            VehicleEngineId = engine.Id,
+            VehicleOwnerId = owner.Id
+        };
 
         _context.VehicleRegistration.Add(registration);
         await _context.SaveChangesAsync();
@@ -78,9 +83,6 @@ public class VehicleRegistrationController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistrationDTO UpdRegistration)
     {
-        if (id != UpdRegistration.Id)
-            return BadRequest("Registration ID mismatch");
-
         var r = await _context.VehicleRegistration.FindAsync(id);
         if (r == null)
             return NotFound();

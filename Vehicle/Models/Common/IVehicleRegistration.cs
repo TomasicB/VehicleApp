@@ -2,8 +2,6 @@
 
 public interface IVehicleRegistration
 {
-    public int Id { get; set; }
-
     public string RegistrationNumber { get; set; }
 
     public int VehicleModelId { get; set; }

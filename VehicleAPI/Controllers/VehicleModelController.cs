@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.DTO;
 
 namespace VehicleAPI.Controllers;
 
@@ -34,16 +35,21 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsModel([FromBody] VehicleModelDTO model, int makeid)
+    public async Task<ActionResult> InsModel([FromBody] VehicleModelDTO m, int makeid)
     {
-        if (model == null)
+        if (m == null)
             return BadRequest("Model is not entered.");
 
         var make = await _context.VehicleMake.FindAsync(makeid);
         if (make == null)
             return BadRequest("Make is not entered.");
 
-        model.VehicleMakeId = make.Id;
+        var model = new VehicleModel()
+        {
+            Name = m.Name,
+            Abrv = m.Abrv,
+            VehicleMakeId = make.Id
+        };
 
         _context.VehicleModel.Add(model);
         await _context.SaveChangesAsync();
@@ -68,9 +74,6 @@ public class VehicleModelController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModelDTO UpdModel)
     {
-        if (id != UpdModel.Id)
-            return BadRequest("Model ID mismatch");
-
         var m = await _context.VehicleModel.FindAsync(id);
         if (m == null)
             return NotFound();
