@@ -1,4 +1,5 @@
-﻿using Vehicle.Models.Common;
+﻿using Vehicle.DAL.Entities;
+using Vehicle.Models.Common;
 
 namespace Vehicle.Models.DTO;
 
@@ -6,9 +7,9 @@ public class VehicleRegistrationDTO : IVehicleRegistration
 {
     public required string RegistrationNumber { get; set; }
 
-    public int VehicleModelId { get; set; }
+    public required VehicleOwner VehicleOwner { get; set; }
 
-    public int VehicleEngineId { get; set; }
+    public required VehicleModel VehicleModel { get; set; }
 
-    public int VehicleOwnerId { get; set; }
+    public required VehicleEngine VehicleEngine { get; set; }
 }

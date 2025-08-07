@@ -1,4 +1,6 @@
-﻿namespace Vehicle.Models.Common;
+﻿using Vehicle.DAL.Entities;
+
+namespace Vehicle.Models.Common;
 
 public interface IVehicleOwner
 {
@@ -7,4 +9,6 @@ public interface IVehicleOwner
     public string LastName { get; set; }
 
     public DateOnly DOB { get; set; }
+
+    public IEnumerable<VehicleRegistration>? VehicleRegistrations { get; }
 }

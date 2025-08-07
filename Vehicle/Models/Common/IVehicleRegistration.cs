@@ -1,12 +1,13 @@
-﻿namespace Vehicle.Models.Common;
+﻿using Vehicle.DAL.Entities;
+using Vehicle.Models.DTO;
 
 public interface IVehicleRegistration
 {
     public string RegistrationNumber { get; set; }
 
-    public int VehicleModelId { get; set; }
+    public VehicleOwner VehicleOwner { get; set; }
 
-    public int VehicleEngineId { get; set; }
+    public VehicleModel VehicleModel { get; set; }
 
-    public int VehicleOwnerId { get; set; }
+    public VehicleEngine VehicleEngine { get; set; }
 }

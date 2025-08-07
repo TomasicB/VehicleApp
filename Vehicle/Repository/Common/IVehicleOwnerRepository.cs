@@ -5,7 +5,7 @@ public interface IVehicleOwnerRepository
 {
     Task<IEnumerable<IVehicleOwner>> GetOwners();
 
-    Task<IEnumerable<IVehicleOwner>> GetOwnerById(string name);
+    Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name);
 
     Task InsOwner(IVehicleOwner o);
 

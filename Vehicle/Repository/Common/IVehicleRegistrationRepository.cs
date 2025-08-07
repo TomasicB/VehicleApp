@@ -5,7 +5,7 @@ public interface IVehicleRegistrationRepository
 {
     Task<IEnumerable<IVehicleRegistration>> GetRegistrations();
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(string number);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number);
 
     Task InsRegistration(IVehicleRegistration registration, int ModelId, int EngineId, int OwnerId);
          

@@ -19,6 +19,8 @@ public class VehicleEngineController : ControllerBase
     public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngine()
     {
         var engine = await _context.VehicleEngine
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(e => new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
             .ToListAsync();
 
         return Ok(engine);
@@ -29,6 +31,8 @@ public class VehicleEngineController : ControllerBase
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Type == type || e.Abrv == type)
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(e => new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
             .ToListAsync();
 
         return Ok(engine);
@@ -74,6 +78,7 @@ public class VehicleEngineController : ControllerBase
             return NotFound();
 
         e.Type = UpdEngine.Type;
+        e.Abrv = UpdEngine.Abrv;
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Engine data updated.\r\nNew Engine name {0}", UpdEngine.Type));

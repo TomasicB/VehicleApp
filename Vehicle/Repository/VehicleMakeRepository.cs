@@ -16,16 +16,18 @@ public class VehicleMakeRepository : IVehicleMakeRepository
     public async Task<IEnumerable<IVehicleMake>> GetMake()
     {
         var make = await _context.VehicleMake
+            .Include(vm => vm.VehicleModels)
             .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv})
             .ToListAsync();
 
         return make;
     }
 
-    public async Task<IEnumerable<IVehicleMake>> GetMakeById(string name)
+    public async Task<IEnumerable<IVehicleMake>> GetMakeByName(string name)
     {
         var make = await _context.VehicleMake
             .Where(m => m.Name == name || m.Abrv == name)
+            .Include(vm => vm.VehicleModels)
             .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv })
             .ToListAsync();
 

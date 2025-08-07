@@ -7,4 +7,6 @@ public class VehicleMake
     public required string Name { get; set; }
 
     public string Abrv { get; set; } = string.Empty;
+
+    public ICollection<VehicleModel>? VehicleModels { get; }
 }

@@ -6,7 +6,7 @@ public interface IVehicleEngineRepository
 {
     Task<IEnumerable<IVehicleEngine>> GetEngine();
 
-    Task<IEnumerable<IVehicleEngine>> GetEngineById(string type);
+    Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type);
 
     Task InsEngine(IVehicleEngine e);
 

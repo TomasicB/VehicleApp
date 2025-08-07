@@ -16,28 +16,34 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
     public async Task<IEnumerable<IVehicleRegistration>> GetRegistrations()
     {
         var registration = await _context.VehicleRegistration
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
             .Select(r => new VehicleRegistrationDTO
             {
                 RegistrationNumber = r.RegistrationNumber,
-                VehicleEngineId = r.VehicleEngineId,
-                VehicleModelId = r.VehicleModelId,
-                VehicleOwnerId = r.VehicleOwnerId
+                VehicleEngine = r.VehicleEngine,
+                VehicleModel = r.VehicleModel,
+                VehicleOwner = r.VehicleOwner
             })
             .ToListAsync();
 
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(string number)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
             .Select(r => new VehicleRegistrationDTO
             {
                 RegistrationNumber = r.RegistrationNumber,
-                VehicleEngineId = r.VehicleEngineId,
-                VehicleModelId = r.VehicleModelId,
-                VehicleOwnerId = r.VehicleOwnerId
+                VehicleEngine = r.VehicleEngine,
+                VehicleModel = r.VehicleModel,
+                VehicleOwner = r.VehicleOwner
             })
             .ToListAsync();
 
@@ -64,9 +70,9 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         var registration = new VehicleRegistration()
         {
             RegistrationNumber = r.RegistrationNumber,
-            VehicleModelId = model.Id,
-            VehicleEngineId = engine.Id,
-            VehicleOwnerId = owner.Id
+            VehicleModel = model,
+            VehicleEngine = engine,
+            VehicleOwner = owner
         };
 
         _context.VehicleRegistration.Add(registration);
@@ -91,9 +97,9 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
             return;
 
         registration.RegistrationNumber = UpdRegistration.RegistrationNumber;
-        registration.VehicleEngineId = UpdRegistration.VehicleEngineId;
-        registration.VehicleModelId = UpdRegistration.VehicleModelId;
-        registration.VehicleOwnerId = UpdRegistration.VehicleOwnerId;
+        registration.VehicleEngineId = UpdRegistration.VehicleEngine.Id;
+        registration.VehicleModelId = UpdRegistration.VehicleModel.Id;
+        registration.VehicleOwnerId = UpdRegistration.VehicleOwner.Id;
         await _context.SaveChangesAsync();
     }
 }

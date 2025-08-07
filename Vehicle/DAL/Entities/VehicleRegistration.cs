@@ -11,4 +11,10 @@ public class VehicleRegistration
     public int VehicleEngineId { get; set; }
 
     public int VehicleOwnerId { get; set; }
+
+    public required VehicleModel VehicleModel { get; set; }
+
+    public required VehicleEngine VehicleEngine { get; set; }
+
+    public required VehicleOwner VehicleOwner { get; set; }
 }

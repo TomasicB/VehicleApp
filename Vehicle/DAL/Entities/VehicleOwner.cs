@@ -9,4 +9,6 @@ public class VehicleOwner
     public required string LastName { get; set; }
 
     public DateOnly DOB { get; set; }
+
+    public IEnumerable<VehicleRegistration>? VehicleRegistrations { get; }
 }

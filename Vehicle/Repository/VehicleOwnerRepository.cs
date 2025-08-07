@@ -16,16 +16,18 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
     public async Task<IEnumerable<IVehicleOwner>> GetOwners()
     {
         var owner = await _context.VehicleOwner
+            .Include(vr => vr.VehicleRegistrations)
             .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
             .ToListAsync();
 
         return owner;
     }
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwnerById(string name)
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name)
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.FirstName == name || o.LastName == name)
+            .Include(vr => vr.VehicleRegistrations)
             .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
             .ToListAsync();
 

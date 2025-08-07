@@ -19,6 +19,12 @@ public class VehicleModelController : ControllerBase
     public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModels()
     {
         var model = await _context.VehicleModel
+            .Select(m => new VehicleModelDTO 
+            { 
+                Name = m.Name, 
+                Abrv = m.Abrv, 
+                VehicleMake = m.VehicleMake
+            })
             .ToListAsync();
 
         return Ok(model);
@@ -29,6 +35,12 @@ public class VehicleModelController : ControllerBase
     {
         var model = await _context.VehicleModel
             .Where(m => m.Name == name || m.Abrv == name)
+            .Select(m => new VehicleModelDTO
+            {
+                Name = m.Name,
+                Abrv = m.Abrv,
+                VehicleMake = m.VehicleMake
+            })
             .ToListAsync();
 
         return Ok(model);
@@ -48,7 +60,7 @@ public class VehicleModelController : ControllerBase
         {
             Name = m.Name,
             Abrv = m.Abrv,
-            VehicleMakeId = make.Id
+            VehicleMake = make
         };
 
         _context.VehicleModel.Add(model);
@@ -79,7 +91,8 @@ public class VehicleModelController : ControllerBase
             return NotFound();
 
         m.Name = UpdModel.Name;
-        m.VehicleMakeId = UpdModel.VehicleMakeId;
+        m.Abrv = UpdModel.Abrv;
+        m.VehicleMakeId = UpdModel.VehicleMake.Id;
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));

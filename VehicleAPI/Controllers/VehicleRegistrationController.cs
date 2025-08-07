@@ -19,6 +19,16 @@ public class VehicleRegistrationController : ControllerBase
     public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrations()
     {
         var registration = await _context.VehicleRegistration
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .Select(r => new VehicleRegistrationDTO
+            {
+                RegistrationNumber = r.RegistrationNumber,
+                VehicleEngine = r.VehicleEngine,
+                VehicleModel = r.VehicleModel,
+                VehicleOwner = r.VehicleOwner
+            })
             .ToListAsync();
 
         return Ok(registration);
@@ -29,6 +39,16 @@ public class VehicleRegistrationController : ControllerBase
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .Select(r => new VehicleRegistrationDTO
+            {
+                RegistrationNumber = r.RegistrationNumber,
+                VehicleEngine = r.VehicleEngine,
+                VehicleModel = r.VehicleModel,
+                VehicleOwner = r.VehicleOwner
+            })
             .ToListAsync();
 
         return Ok(registration);
@@ -55,9 +75,9 @@ public class VehicleRegistrationController : ControllerBase
         var registration = new VehicleRegistration()
         {
             RegistrationNumber = r.RegistrationNumber,
-            VehicleModelId = model.Id,
-            VehicleEngineId = engine.Id,
-            VehicleOwnerId = owner.Id
+            VehicleModel = model,
+            VehicleEngine = engine,
+            VehicleOwner = owner
         };
 
         _context.VehicleRegistration.Add(registration);
@@ -88,9 +108,9 @@ public class VehicleRegistrationController : ControllerBase
             return NotFound();
 
         r.RegistrationNumber = UpdRegistration.RegistrationNumber;
-        r.VehicleEngineId = UpdRegistration.VehicleEngineId;
-        r.VehicleModelId = UpdRegistration.VehicleModelId;
-        r.VehicleOwnerId = UpdRegistration.VehicleOwnerId;
+        r.VehicleEngineId = UpdRegistration.VehicleEngine.Id;
+        r.VehicleModelId = UpdRegistration.VehicleModel.Id;
+        r.VehicleOwnerId = UpdRegistration.VehicleOwner.Id;
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Registration data updated.\r\nNew Registration name {0}", UpdRegistration.RegistrationNumber));

@@ -20,6 +20,8 @@ public class VehicleOwnerController : ControllerBase
     public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwners()
     {
         var owner = await _context.VehicleOwner
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
             .ToListAsync();
 
         return Ok(owner);
@@ -30,6 +32,8 @@ public class VehicleOwnerController : ControllerBase
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.FirstName == name || o.LastName == name)
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
             .ToListAsync();
 
         return Ok(owner);

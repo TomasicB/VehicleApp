@@ -9,4 +9,8 @@ public class VehicleModel
     public string Abrv { get; set; } = string.Empty;
 
     public int VehicleMakeId { get; set; }
+
+    public required VehicleMake VehicleMake { get; set; }
+
+    public IEnumerable<VehicleRegistration>? VehicleRegistrations { get; }
 }

@@ -19,6 +19,8 @@ public class VehicleMakeController : ControllerBase
     public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMake()
     {
         var make = await _context.VehicleMake
+            .Include(vm => vm.VehicleModels)
+            .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv })
             .ToListAsync();
 
         return Ok(make);
@@ -29,6 +31,8 @@ public class VehicleMakeController : ControllerBase
     {
         var make = await _context.VehicleMake
             .Where(m => m.Name == name || m.Abrv == name)
+            .Include(vm => vm.VehicleModels)
+            .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv })
             .ToListAsync();
 
         return Ok(make);
@@ -74,6 +78,7 @@ public class VehicleMakeController : ControllerBase
             return NotFound();
 
         m.Name = UpdMake.Name;
+        m.Abrv = UpdMake.Abrv;
         await _context.SaveChangesAsync();
 
         return Ok(string.Format("Make data updated.\r\nNew make name {0}", UpdMake.Name));

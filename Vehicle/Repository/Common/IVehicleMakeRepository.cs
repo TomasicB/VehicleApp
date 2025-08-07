@@ -6,7 +6,7 @@ public interface IVehicleMakeRepository
 {
     Task<IEnumerable<IVehicleMake>> GetMake();
 
-    Task<IEnumerable<IVehicleMake>> GetMakeById(string name);
+    Task<IEnumerable<IVehicleMake>> GetMakeByName(string name);
 
     Task InsMake(IVehicleMake make);
 

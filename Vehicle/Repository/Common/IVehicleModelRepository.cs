@@ -5,7 +5,7 @@ public interface IVehicleModelRepository
 {
     Task<IEnumerable<IVehicleModel>> GetModels();
 
-    Task<IEnumerable<IVehicleModel>> GetModelById(string name);
+    Task<IEnumerable<IVehicleModel>> GetModelByName(string name);
 
     Task InsModel(IVehicleModel model, int makeid);
 

@@ -16,16 +16,18 @@ public class VehicleEngineRepository : IVehicleEngineRepository
     public async Task<IEnumerable<IVehicleEngine>> GetEngine()
     {
         var engine = await _context.VehicleEngine
+            .Include(vr => vr.VehicleRegistrations)
             .Select(e=> new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
             .ToListAsync();
 
         return engine;
     }
 
-    public async Task<IEnumerable<IVehicleEngine>> GetEngineById(string type)
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type)
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Type == type || e.Abrv == type)
+            .Include(vr => vr.VehicleRegistrations)
             .Select(e => new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
             .ToListAsync();
 

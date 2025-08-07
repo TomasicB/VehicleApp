@@ -17,17 +17,21 @@ public class VehicleModelRepository : IVehicleModelRepository
     public async Task<IEnumerable<IVehicleModel>> GetModels()
     {
         var model = await _context.VehicleModel
-            .Select(m => new VehicleModelDTO { Name = m.Name, Abrv = m.Abrv, VehicleMakeId = m.VehicleMakeId })
+            .Include(vm => vm.VehicleMake)
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(m => new VehicleModelDTO { Name = m.Name, Abrv = m.Abrv, VehicleMake = m.VehicleMake })
             .ToListAsync();
 
         return model;
     }
 
-    public async Task<IEnumerable<IVehicleModel>> GetModelById(string name)
+    public async Task<IEnumerable<IVehicleModel>> GetModelByName(string name)
     {
         var model = await _context.VehicleModel
             .Where(m => m.Name == name || m.Abrv == name)
-            .Select(m => new VehicleModelDTO { Name = m.Name, Abrv = m.Abrv, VehicleMakeId = m.VehicleMakeId })
+            .Include(vm => vm.VehicleMake)
+            .Include(vr => vr.VehicleRegistrations)
+            .Select(m => new VehicleModelDTO { Name = m.Name, Abrv = m.Abrv, VehicleMake = m.VehicleMake })
             .ToListAsync();
 
         return model;
@@ -46,7 +50,7 @@ public class VehicleModelRepository : IVehicleModelRepository
         {
             Name = m.Name,
             Abrv = m.Abrv,
-            VehicleMakeId = make.Id
+            VehicleMake = make
         };
 
         _context.VehicleModel.Add(model);
@@ -72,7 +76,7 @@ public class VehicleModelRepository : IVehicleModelRepository
 
         model.Name = UpdModel.Name;
         model.Abrv = UpdModel.Abrv;
-        model.VehicleMakeId = UpdModel.VehicleMakeId;
+        model.VehicleMakeId = UpdModel.VehicleMake.Id;
         await _context.SaveChangesAsync();
     }
 }
