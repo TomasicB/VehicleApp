@@ -1,49 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.DTOs;
+using Vehicle.Models.DTOs.Write;
+using Vehicle.Repository.Common;
 
-namespace VehicleAPI.Controllers;
+namespace Vehicle.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class VehicleModelController : ControllerBase
 {
-    private readonly VehicleDbContext _context;
+    private readonly IVehicleModelRepository _modelRepo;
 
-    public VehicleModelController(VehicleDbContext context) => _context = context;
+    public VehicleModelController(IVehicleModelRepository modelRepo)
+    {
+        _modelRepo = modelRepo;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModels()
     {
-        var model = await _context.VehicleModel
-            .Select(m => new VehicleModelDTO 
-            { 
-                Name = m.Name, 
-                Abrv = m.Abrv, 
-                VehicleMake = m.VehicleMake
-            })
-            .ToListAsync();
-
-        return Ok(model);
+        try
+        {
+            var model = await _modelRepo.GetModels();
+            return Ok(model);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModelById(string name)
+    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModelByName(string name)
     {
-        var model = await _context.VehicleModel
-            .Where(m => m.Name == name || m.Abrv == name)
-            .Select(m => new VehicleModelDTO
-            {
-                Name = m.Name,
-                Abrv = m.Abrv,
-                VehicleMake = m.VehicleMake
-            })
-            .ToListAsync();
-
-        return Ok(model);
+        try
+        {
+            var model = await _modelRepo.GetModelByName(name);
+            return Ok(model);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPost]
@@ -52,49 +50,51 @@ public class VehicleModelController : ControllerBase
         if (m == null)
             return BadRequest("Model is not entered.");
 
-        var make = await _context.VehicleMake.FindAsync(makeid);
-        if (make == null)
+        if (makeid == 0)
             return BadRequest("Make is not entered.");
 
-        var model = new VehicleModel()
+        try
         {
-            Name = m.Name,
-            Abrv = m.Abrv,
-            VehicleMake = make
-        };
-
-        _context.VehicleModel.Add(model);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Model inserted. ({1}){0}", model.Name, make.Name));
+            await _modelRepo.InsModel(m, makeid);
+            return Ok(string.Format("Model inserted. ({1}){0}", m.Name, m.Name));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpDelete]
     public async Task<ActionResult> DelModel(int id)
     {
-        var m = await _context.VehicleModel.FindAsync(id);
-
-        if (m == null)
+        if (id == 0)
             return NotFound();
 
-        _context.VehicleModel.Remove(m);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Model {0} is deleted", m.Name));
+        try
+        {
+            await _modelRepo.DelModel(id);
+            return Ok("Model is deleted");
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModelDTO UpdModel)
+    public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModelWriteDTO UpdModel)
     {
-        var m = await _context.VehicleModel.FindAsync(id);
-        if (m == null)
+        if (id == 0)
             return NotFound();
 
-        m.Name = UpdModel.Name;
-        m.Abrv = UpdModel.Abrv;
-        m.VehicleMakeId = UpdModel.VehicleMake.Id;
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));
+        try
+        {
+            await _modelRepo.UpdModel(id, UpdModel);
+            return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

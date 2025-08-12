@@ -1,41 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.DTOs;
+using Vehicle.Models.DTOs.Write;
+using Vehicle.Repository.Common;
 
-namespace VehicleAPI.Controllers;
+namespace Vehicle.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class VehicleMakeController : ControllerBase
 {
-    private readonly VehicleDbContext _context;
+    private readonly IVehicleMakeRepository _makeRepo;
 
-    public VehicleMakeController(VehicleDbContext context) => _context = context;
+    public VehicleMakeController(IVehicleMakeRepository makeRepo)
+    {
+        _makeRepo = makeRepo;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMake()
     {
-        var make = await _context.VehicleMake
-            .Include(vm => vm.VehicleModels)
-            .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv })
-            .ToListAsync();
-
-        return Ok(make);
+        try
+        {
+            var make = await _makeRepo.GetMake();
+            return Ok(make);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMakeById(string name)
+    public async Task<ActionResult<IEnumerable<VehicleMakeDTO>>> GetMakeByName(string name)
     {
-        var make = await _context.VehicleMake
-            .Where(m => m.Name == name || m.Abrv == name)
-            .Include(vm => vm.VehicleModels)
-            .Select(m => new VehicleMakeDTO { Name = m.Name, Abrv = m.Abrv })
-            .ToListAsync();
-
-        return Ok(make);
+        try
+        { 
+            var make = await _makeRepo.GetMakeByName(name);
+            return Ok(make);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPost]
@@ -44,43 +50,48 @@ public class VehicleMakeController : ControllerBase
         if (m == null)
             return BadRequest("Make is not entered.");
 
-        var make = new VehicleMake()
+        try
         {
-            Name = m.Name,
-            Abrv = m.Abrv
-        };
+            await _makeRepo.InsMake(m);
+            return Ok(string.Format("Make inserted. {0}", m.Name));
+        }
+        catch (Exception) 
+        {
+            throw;
+        }
 
-        _context.VehicleMake.Add(make);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Make inserted. {0}", m.Name));
     }
 
     [HttpDelete]
     public async Task<ActionResult> DelMake(int id)
     {
-        var m = await _context.VehicleMake.FindAsync(id);
-
-        if (m == null)
+        if (id == 0)
             return NotFound();
 
-        _context.VehicleMake.Remove(m);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Make {0} is deleted", m.Name));
+        try
+        {
+            await _makeRepo.DelMake(id);
+            return Ok("Make is deleted");
+        }
+        catch (Exception) 
+        { 
+            throw; 
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdMake(int id, [FromBody] VehicleMakeDTO UpdMake)
+    public async Task<ActionResult> UpdMake(int id, [FromBody] VehicleMakeWriteDTO UpdMake)
     {
-        var m = await _context.VehicleMake.FindAsync(id);
-        if (m == null)
+        if (id == 0)
             return NotFound();
-
-        m.Name = UpdMake.Name;
-        m.Abrv = UpdMake.Abrv;
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Make data updated.\r\nNew make name {0}", UpdMake.Name));
+        try
+        {
+            await _makeRepo.UpdMake(id, UpdMake);
+            return Ok(string.Format("Make data updated.\r\nNew make name {0}", UpdMake.Name));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

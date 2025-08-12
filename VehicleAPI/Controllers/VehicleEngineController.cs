@@ -1,41 +1,46 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.DTOs;
+using Vehicle.Repository.Common;
 
-namespace VehicleAPI.Controllers;
+namespace Vehicle.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class VehicleEngineController : ControllerBase
 {
-    private readonly VehicleDbContext _context;
-
-    public VehicleEngineController(VehicleDbContext context) => _context = context;
+    private readonly IVehicleEngineRepository _engineRepo;
+   
+    public VehicleEngineController(IVehicleEngineRepository engineRepo)
+    {
+        _engineRepo = engineRepo;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngine()
     {
-        var engine = await _context.VehicleEngine
-            .Include(vr => vr.VehicleRegistrations)
-            .Select(e => new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
-            .ToListAsync();
-
-        return Ok(engine);
+        try
+        {
+            var engine = await _engineRepo.GetEngine();
+            return Ok(engine);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngineById(string type)
+    [HttpGet("{type}")]
+    public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngineByName(string type)
     {
-        var engine = await _context.VehicleEngine
-            .Where(e => e.Type == type || e.Abrv == type)
-            .Include(vr => vr.VehicleRegistrations)
-            .Select(e => new VehicleEngineDTO { Type = e.Type, Abrv = e.Abrv })
-            .ToListAsync();
-
-        return Ok(engine);
+        try
+        {
+            var engine = await _engineRepo.GetEngineByName(type);
+            return Ok(engine);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPost]
@@ -43,44 +48,47 @@ public class VehicleEngineController : ControllerBase
     {
         if (e == null)
             return BadRequest("Engine is not entered.");
-
-        var engine = new VehicleEngine()
+        
+        try
         {
-            Type = e.Type,
-            Abrv = e.Abrv
-        };
-
-        _context.VehicleEngine.Add(engine);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Engine inserted. {0}", engine.Type));
+            await _engineRepo.InsEngine(e);
+            return Ok(string.Format("Engine inserted. {0}", e.Type));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpDelete]
     public async Task<ActionResult> DelEngine(int id)
     {
-        var e = await _context.VehicleEngine.FindAsync(id);
-
-        if (e == null)
+        if (id == 0)
             return NotFound();
-
-        _context.VehicleEngine.Remove(e);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Engine {0} is deleted", e.Type));
+        try
+        {
+            await _engineRepo.DelEngine(id);
+            return Ok("Engine is deleted");
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPut]
     public async Task<ActionResult> UpdEngine(int id, [FromBody] VehicleEngineDTO UpdEngine)
     {
-        var e = await _context.VehicleEngine.FindAsync(id);
-        if (e == null)
+        if (id == 0)
             return NotFound();
-
-        e.Type = UpdEngine.Type;
-        e.Abrv = UpdEngine.Abrv;
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Engine data updated.\r\nNew Engine name {0}", UpdEngine.Type));
+        try
+        {
+            await _engineRepo.UpdEngine(id, UpdEngine);
+            return Ok(string.Format("Engine data updated.\r\nNew Engine name {0}", UpdEngine.Type));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

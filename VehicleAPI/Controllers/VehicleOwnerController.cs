@@ -1,42 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.DTOs;
+using Vehicle.Models.DTOs.Write;
+using Vehicle.Repository.Common;
 
-namespace VehicleAPI.Controllers;
+namespace Vehicle.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class VehicleOwnerController : ControllerBase
 {
-    private readonly VehicleDbContext _context;
+    private readonly IVehicleOwnerRepository _ownerRepo;
 
-    public VehicleOwnerController(VehicleDbContext context) => _context = context;
-
+    public VehicleOwnerController(IVehicleOwnerRepository ownerRepo)
+    {
+        _ownerRepo = ownerRepo;
+    }
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwners()
     {
-        var owner = await _context.VehicleOwner
-            .Include(vr => vr.VehicleRegistrations)
-            .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
-            .ToListAsync();
-
-        return Ok(owner);
+        try
+        {
+            var owner = await _ownerRepo.GetOwners();
+            return Ok(owner);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpGet("{name}")]
     public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwnerById(string name)
     {
-        var owner = await _context.VehicleOwner
-            .Where(o => o.FirstName == name || o.LastName == name)
-            .Include(vr => vr.VehicleRegistrations)
-            .Select(o => new VehicleOwnerDTO { LastName = o.LastName, FirstName = o.FirstName, DOB = o.DOB })
-            .ToListAsync();
-
-        return Ok(owner);
+        try
+        {
+            var owner = await _ownerRepo.GetOwnerByName(name);
+            return Ok(owner);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPost]
@@ -45,48 +50,50 @@ public class VehicleOwnerController : ControllerBase
         if (o == null)
             return BadRequest("Owner is not entered.");
 
-        var owner = new VehicleOwner()
+        try
         {
-            LastName = o.LastName,
-            FirstName = o.FirstName,
-            DOB = o.DOB
-        };
-
-        _context.VehicleOwner.Add(owner);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
+            await _ownerRepo.InsOwner(o);
+            return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpDelete]
     public async Task<ActionResult> DelOwner(int id)
     {
-        var o = await _context.VehicleOwner.FindAsync(id);
-
-        if (o == null)
+        if (id == 0)
             return NotFound();
 
-        _context.VehicleOwner.Remove(o);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Owner {0} {1} {2} deleted", o.Id, o.FirstName, o.LastName));
+        try
+        {
+            await _ownerRepo.DelOwner(id);
+            return Ok("Owner is deleted");
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerDTO UpdOwner)
+    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerWriteDTO UpdOwner)
     {
-        var o = await _context.VehicleOwner.FindAsync(id);
-        if (o == null)
+        if (id == 0)
             return NotFound();
 
-        o.FirstName= UpdOwner.FirstName;
-        o.LastName= UpdOwner.LastName;
-        o.DOB= UpdOwner.DOB;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Owner data updated.\r\n" +
-            "New data: {0}\t{1}",  
-            UpdOwner.FirstName, UpdOwner.LastName));
+        try
+        {
+            await _ownerRepo.UpdOwner(id, UpdOwner);
+            return Ok(string.Format("Owner data updated.\r\n" +
+                "New data: {0}\t{1}",
+                UpdOwner.FirstName, UpdOwner.LastName));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

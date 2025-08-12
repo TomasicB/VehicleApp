@@ -1,57 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.DTOs;
+using Vehicle.Models.DTOs.Write;
+using Vehicle.Repository.Common;
 
-namespace VehicleAPI.Controllers;
+namespace Vehicle.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class VehicleRegistrationController : ControllerBase
 {
-    private readonly VehicleDbContext _context;
+    private readonly IVehicleRegistrationRepository _regRepo;
 
-    public VehicleRegistrationController(VehicleDbContext context) => _context = context;
+    public VehicleRegistrationController(IVehicleRegistrationRepository regRepo)
+    {
+        _regRepo = regRepo;
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrations()
     {
-        var registration = await _context.VehicleRegistration
-            .Include(vm => vm.VehicleModel)
-            .Include(ve => ve.VehicleEngine)
-            .Include(vo => vo.VehicleOwner)
-            .Select(r => new VehicleRegistrationDTO
-            {
-                RegistrationNumber = r.RegistrationNumber,
-                VehicleEngine = r.VehicleEngine,
-                VehicleModel = r.VehicleModel,
-                VehicleOwner = r.VehicleOwner
-            })
-            .ToListAsync();
-
-        return Ok(registration);
+        try
+        {
+            var registration = await _regRepo.GetRegistrations();
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpGet("{number}")]
     public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrationById(string number)
     {
-        var registration = await _context.VehicleRegistration
-            .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
-            .Include(vm => vm.VehicleModel)
-            .Include(ve => ve.VehicleEngine)
-            .Include(vo => vo.VehicleOwner)
-            .Select(r => new VehicleRegistrationDTO
-            {
-                RegistrationNumber = r.RegistrationNumber,
-                VehicleEngine = r.VehicleEngine,
-                VehicleModel = r.VehicleModel,
-                VehicleOwner = r.VehicleOwner
-            })
-            .ToListAsync();
-
-        return Ok(registration);
+        try
+        {
+            var registration = await _regRepo.GetRegistrationByNumber(number);
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPost]
@@ -60,59 +50,57 @@ public class VehicleRegistrationController : ControllerBase
         if (r == null)
             return BadRequest("Registration is not entered.");
 
-        var model = await _context.VehicleModel.FindAsync(ModelId);
-        if (model == null)
+        if (ModelId == 0)
             return BadRequest("Model is not entered.");
 
-        var engine = await _context.VehicleEngine.FindAsync(EngineId);
-        if (engine == null)
+        if (EngineId == 0)
             return BadRequest("Engine is not entered.");
 
-        var owner = await _context.VehicleOwner.FindAsync(OwnerId);
-        if (owner == null)
+        if (OwnerId == 0)
             return BadRequest("Owner is not entered.");
 
-        var registration = new VehicleRegistration()
+        try
         {
-            RegistrationNumber = r.RegistrationNumber,
-            VehicleModel = model,
-            VehicleEngine = engine,
-            VehicleOwner = owner
-        };
-
-        _context.VehicleRegistration.Add(registration);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Registration inserted. {0}\t{1} {2}\t{3},{4}", registration.RegistrationNumber, owner.FirstName, owner.LastName, engine.Type, model.Name));
+            await _regRepo.InsRegistration(r, ModelId, EngineId, OwnerId);
+            return Ok(string.Format("Registration inserted. {0}", r.RegistrationNumber));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpDelete]
     public async Task<ActionResult> DelRegistration(int id)
     {
-        var r = await _context.VehicleRegistration.FindAsync(id);
-
-        if (r == null)
+        if (id == 0)
             return NotFound();
 
-        _context.VehicleRegistration.Remove(r);
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Registration {0} is deleted", r.RegistrationNumber));
+        try
+        {
+            await _regRepo.DelRegistration(id);
+            return Ok("Registration is deleted");
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistrationDTO UpdRegistration)
+    public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistrationWriteDTO UpdRegistration)
     {
-        var r = await _context.VehicleRegistration.FindAsync(id);
-        if (r == null)
+        if (id == 0)
             return NotFound();
 
-        r.RegistrationNumber = UpdRegistration.RegistrationNumber;
-        r.VehicleEngineId = UpdRegistration.VehicleEngine.Id;
-        r.VehicleModelId = UpdRegistration.VehicleModel.Id;
-        r.VehicleOwnerId = UpdRegistration.VehicleOwner.Id;
-        await _context.SaveChangesAsync();
-
-        return Ok(string.Format("Registration data updated.\r\nNew Registration name {0}", UpdRegistration.RegistrationNumber));
+        try
+        {
+            await _regRepo.UpdRegistration(id, UpdRegistration);
+            return Ok(string.Format("Registration data updated.\r\nNew Registration noumber {0}", UpdRegistration.RegistrationNumber));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
