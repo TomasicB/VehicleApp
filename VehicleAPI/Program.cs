@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.Models.Common;
 using Vehicle.Models.Common.Write;
+using Vehicle.Service.Common;
+using Vehicle.Service;
 using Vehicle.Repository.Common;
 using Vehicle.Repository;
 using Vehicle.Models.DTOs;
@@ -17,12 +19,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IVehicleDbContext, VehicleDbContext>();
 
-builder.Services.AddScoped<IVehicleEngineRepository, VehicleEngineRepository>();
-builder.Services.AddScoped<IVehicleMakeRepository, VehicleMakeRepository>();
-builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
-builder.Services.AddScoped<IVehicleOwnerRepository, VehicleOwnerRepository>();
-builder.Services.AddScoped<IVehicleRegistrationRepository, VehicleRegistrationRepository>();
-
 builder.Services.AddScoped<IVehicleEngineWrite, VehicleEngineWriteDTO>();
 builder.Services.AddScoped<IVehicleMakeWrite, VehicleMakeWriteDTO>();
 builder.Services.AddScoped<IVehicleModelWrite, VehicleModelWriteDTO>();
@@ -34,6 +30,18 @@ builder.Services.AddScoped<IVehicleMake, VehicleMakeDTO>();
 builder.Services.AddScoped<IVehicleModel, VehicleModelDTO>();
 builder.Services.AddScoped<IVehicleOwner, VehicleOwnerDTO>();
 builder.Services.AddScoped<IVehicleRegistration, VehicleRegistrationDTO>();
+
+builder.Services.AddScoped<IVehicleEngineRepository, VehicleEngineRepository>();
+builder.Services.AddScoped<IVehicleMakeRepository, VehicleMakeRepository>();
+builder.Services.AddScoped<IVehicleModelRepository, VehicleModelRepository>();
+builder.Services.AddScoped<IVehicleOwnerRepository, VehicleOwnerRepository>();
+builder.Services.AddScoped<IVehicleRegistrationRepository, VehicleRegistrationRepository>();
+
+builder.Services.AddScoped<IVehicleEngineService, VehicleEngineService>();
+builder.Services.AddScoped<IVehicleMakeService, VehicleMakeService>();
+builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
+builder.Services.AddScoped<IVehicleOwnerService, VehicleOwnerService>();
+builder.Services.AddScoped<IVehicleRegistrationService, VehicleRegistrationService>();
 
 builder.Services.AddDbContext<VehicleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(typeof(Program));

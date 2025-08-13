@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
 using Vehicle.Models.DTOs.Write;
-using Vehicle.Repository.Common;
+using Vehicle.Service.Common;
 
 namespace Vehicle.Controllers;
 
@@ -9,19 +10,19 @@ namespace Vehicle.Controllers;
 [ApiController]
 public class VehicleModelController : ControllerBase
 {
-    private readonly IVehicleModelRepository _modelRepo;
+    private readonly IVehicleModelService _modelService;
 
-    public VehicleModelController(IVehicleModelRepository modelRepo)
+    public VehicleModelController(IVehicleModelService modelService)
     {
-        _modelRepo = modelRepo;
+        _modelService = modelService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModels()
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModels()
     {
         try
         {
-            var model = await _modelRepo.GetModels();
+            var model = await _modelService.GetModels();
             return Ok(model);
         }
         catch (Exception)
@@ -30,12 +31,26 @@ public class VehicleModelController : ControllerBase
         }
     }
 
-    [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleModelDTO>>> GetModelByName(string name)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelById(int id)
     {
         try
         {
-            var model = await _modelRepo.GetModelByName(name);
+            var model = await _modelService.GetModelById(id);
+            return Ok(model);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("{name:string}")]
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByName(string name)
+    {
+        try
+        {
+            var model = await _modelService.GetModelByName(name);
             return Ok(model);
         }
         catch (Exception)
@@ -55,7 +70,7 @@ public class VehicleModelController : ControllerBase
 
         try
         {
-            await _modelRepo.InsModel(m, makeid);
+            await _modelService.InsModel(m, makeid);
             return Ok(string.Format("Model inserted. ({1}){0}", m.Name, m.Name));
         }
         catch (Exception)
@@ -72,7 +87,7 @@ public class VehicleModelController : ControllerBase
 
         try
         {
-            await _modelRepo.DelModel(id);
+            await _modelService.DelModel(id);
             return Ok("Model is deleted");
         }
         catch (Exception)
@@ -89,7 +104,7 @@ public class VehicleModelController : ControllerBase
 
         try
         {
-            await _modelRepo.UpdModel(id, UpdModel);
+            await _modelService.UpdModel(id, UpdModel);
             return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));
         }
         catch (Exception)

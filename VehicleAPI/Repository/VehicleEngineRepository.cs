@@ -32,6 +32,17 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
+    public async Task<IEnumerable<VehicleEngineDTO>> GetEngineById(int id)
+    {
+        var engine = await _context.VehicleEngine
+            .Where(e => e.Id == id)
+            .Include(vr => vr.VehicleRegistrations)
+            .ProjectTo<VehicleEngineDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return engine;
+    }
+
     public async Task<IEnumerable<VehicleEngineDTO>> GetEngineByName(string type)
     {
         var engine = await _context.VehicleEngine
@@ -43,7 +54,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
-    public async Task InsEngine(VehicleEngineDTO e)
+    public async Task InsEngine(IVehicleEngine e)
     {
         if (e == null)
             return;
@@ -65,7 +76,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdEngine(int id, VehicleEngineDTO UpdEngine)
+    public async Task UpdEngine(int id, IVehicleEngine UpdEngine)
     {
         var engine = await _context.VehicleEngine.FindAsync(id);
         if (engine == null)

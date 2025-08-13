@@ -4,13 +4,14 @@ using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
 using Vehicle.Models.DTOs.Write;
 
-namespace Vehicle.Service.Profiles;
+namespace Vehicle.Common.Profiles;
 
 public class VehicleModelProfile : Profile
 {
     public VehicleModelProfile()
     {
-        CreateMap<VehicleModel, VehicleModelDTO>();
+        CreateMap<VehicleModel, VehicleModelDTO>()
+            .ReverseMap();
         CreateMap<VehicleModelWriteDTO, VehicleModel>();
 
         CreateMap<VehicleMake, VehicleMakeDTO>();

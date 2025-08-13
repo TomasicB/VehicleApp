@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Service\Common\" />
     <Folder Include="Tests\" />
     <Folder Include="Repository\Tests\" />
     <Folder Include="Service\Tests\" />

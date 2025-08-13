@@ -1,4 +1,5 @@
 ﻿using Vehicle.Models.Common;
+using Vehicle.Models.Common.Write;
 
 namespace Vehicle.Models.DTOs;
 

@@ -1,12 +1,12 @@
 ﻿using Vehicle.Models.Common;
 using Vehicle.Models.Common.Write;
 
-namespace Vehicle.Repository.Common;
-public interface IVehicleRegistrationRepository
+namespace Vehicle.Service.Common;
+public interface IVehicleRegistrationService
 {
     Task<IEnumerable<IVehicleRegistration>> GetRegistrations();
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int Id);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int id);
 
     Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number);
 

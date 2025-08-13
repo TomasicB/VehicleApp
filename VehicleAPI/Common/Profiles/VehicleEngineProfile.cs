@@ -3,7 +3,7 @@ using Vehicle.DAL.Entities;
 using Vehicle.Models.DTOs;
 using Vehicle.Models.DTOs.Write;
 
-namespace Vehicle.Service.Profiles;
+namespace Vehicle.Common.Profiles;
 
 public class VehicleEngineProfile : Profile
 {

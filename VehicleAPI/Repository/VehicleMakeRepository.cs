@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
+using Vehicle.Models.Common;
 using Vehicle.Repository.Common;
 
 namespace Vehicle.Repository;
@@ -20,7 +20,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<VehicleMakeDTO>> GetMake()
+    public async Task<IEnumerable<IVehicleMake>> GetMake()
     {
         var make = await _context.VehicleMake
             .Include(vm => vm.VehicleModels)
@@ -30,7 +30,18 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         return make;
     }
 
-    public async Task<IEnumerable<VehicleMakeDTO>> GetMakeByName(string name)
+    public async Task<IEnumerable<IVehicleMake>> GetMakeById(int id)
+    {
+        var make = await _context.VehicleMake
+            .Where(m => m.Id == id)
+            .Include(vm => vm.VehicleModels)
+            .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return make;
+    }
+
+    public async Task<IEnumerable<IVehicleMake>> GetMakeByName(string name)
     {
         var make = await _context.VehicleMake
             .Where(m => m.Name == name || m.Abrv == name)
@@ -41,7 +52,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         return make;
     }
 
-    public async Task InsMake(VehicleMakeDTO m)
+    public async Task InsMake(IVehicleMake m)
     {
         if (m == null)
             return;
@@ -63,7 +74,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdMake(int id, VehicleMakeWriteDTO UpdMake)
+    public async Task UpdMake(int id, IVehicleMake UpdMake)
     {
         var make = await _context.VehicleMake.FindAsync(id);
         if (make == null)

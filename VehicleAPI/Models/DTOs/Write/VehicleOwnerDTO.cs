@@ -10,7 +10,7 @@ public class VehicleOwnerWriteDTO : IVehicleOwnerWrite
 
     public required string LastName { get; set; }
 
-    public required DateOnly DOB { get; set; }
+    public DateOnly DOB { get; set; }
 
     public IEnumerable<VehicleRegistrationDTO>? VehicleRegistrations { get; }
 }

@@ -3,13 +3,14 @@ using Vehicle.DAL.Entities;
 using Vehicle.Models.DTOs;
 using Vehicle.Models.DTOs.Write;
 
-namespace Vehicle.Service.Profiles;
+namespace Vehicle.Common.Profiles;
 
 public class VehicleRegistrationProfile : Profile
 {
     public VehicleRegistrationProfile()
     {
-        CreateMap<VehicleRegistration, VehicleRegistrationDTO>();
+        CreateMap<VehicleRegistration, VehicleRegistrationDTO>()
+            .ReverseMap();
         CreateMap<VehicleRegistrationWriteDTO, VehicleRegistration>();
 
         CreateMap<VehicleEngine, VehicleEngineDTO>();

@@ -3,8 +3,8 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
 using Vehicle.Repository.Common;
 
 namespace Vehicle.Repository;
@@ -20,7 +20,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<VehicleOwnerDTO>> GetOwners()
+    public async Task<IEnumerable<IVehicleOwner>> GetOwners()
     {
         var owner = await _context.VehicleOwner
             .Include(vr => vr.VehicleRegistrations)
@@ -30,7 +30,18 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         return owner;
     }
 
-    public async Task<IEnumerable<VehicleOwnerDTO>> GetOwnerByName(string name)
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnerById(int id)
+    {
+        var owner = await _context.VehicleOwner
+            .Where(o => o.Id == id)
+            .Include(vr => vr.VehicleRegistrations)
+            .ProjectTo<VehicleOwnerDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return owner;
+    }
+
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name)
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.FirstName == name || o.LastName == name)
@@ -41,7 +52,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         return owner;
     }
 
-    public async Task InsOwner(VehicleOwnerDTO o)
+    public async Task InsOwner(IVehicleOwner o)
     {
         if (o == null)
             return;
@@ -63,7 +74,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdOwner(int id, VehicleOwnerWriteDTO UpdOwner)
+    public async Task UpdOwner(int id, IVehicleOwner UpdOwner)
     {
         var owner = await _context.VehicleOwner.FindAsync(id);
         if (owner == null)

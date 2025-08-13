@@ -1,8 +1,8 @@
 ﻿using Vehicle.Models.Common;
 
-namespace Vehicle.Repository.Common;
+namespace Vehicle.Service.Common;
 
-public interface IVehicleMakeRepository
+public interface IVehicleMakeService
 {
     Task<IEnumerable<IVehicleMake>> GetMake();
 

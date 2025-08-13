@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
 using Vehicle.Models.DTOs.Write;
-using Vehicle.Repository.Common;
+using Vehicle.Service.Common;
 
 namespace Vehicle.Controllers;
 
@@ -9,19 +10,19 @@ namespace Vehicle.Controllers;
 [ApiController]
 public class VehicleRegistrationController : ControllerBase
 {
-    private readonly IVehicleRegistrationRepository _regRepo;
+    private readonly IVehicleRegistrationService _regService;
 
-    public VehicleRegistrationController(IVehicleRegistrationRepository regRepo)
+    public VehicleRegistrationController(IVehicleRegistrationService regRepo)
     {
-        _regRepo = regRepo;
+        _regService = regRepo;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrations()
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrations()
     {
         try
         {
-            var registration = await _regRepo.GetRegistrations();
+            var registration = await _regService.GetRegistrations();
             return Ok(registration);
         }
         catch (Exception)
@@ -30,12 +31,26 @@ public class VehicleRegistrationController : ControllerBase
         }
     }
 
-    [HttpGet("{number}")]
-    public async Task<ActionResult<IEnumerable<VehicleRegistrationDTO>>> GetRegistrationById(string number)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationById(int id)
     {
         try
         {
-            var registration = await _regRepo.GetRegistrationByNumber(number);
+            var registration = await _regService.GetRegistrationById(id);
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("{number:string}")]
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByNumber(string number)
+    {
+        try
+        {
+            var registration = await _regService.GetRegistrationByNumber(number);
             return Ok(registration);
         }
         catch (Exception)
@@ -61,7 +76,7 @@ public class VehicleRegistrationController : ControllerBase
 
         try
         {
-            await _regRepo.InsRegistration(r, ModelId, EngineId, OwnerId);
+            await _regService.InsRegistration(r, ModelId, EngineId, OwnerId);
             return Ok(string.Format("Registration inserted. {0}", r.RegistrationNumber));
         }
         catch (Exception)
@@ -78,7 +93,7 @@ public class VehicleRegistrationController : ControllerBase
 
         try
         {
-            await _regRepo.DelRegistration(id);
+            await _regService.DelRegistration(id);
             return Ok("Registration is deleted");
         }
         catch (Exception)
@@ -95,7 +110,7 @@ public class VehicleRegistrationController : ControllerBase
 
         try
         {
-            await _regRepo.UpdRegistration(id, UpdRegistration);
+            await _regService.UpdRegistration(id, UpdRegistration);
             return Ok(string.Format("Registration data updated.\r\nNew Registration noumber {0}", UpdRegistration.RegistrationNumber));
         }
         catch (Exception)

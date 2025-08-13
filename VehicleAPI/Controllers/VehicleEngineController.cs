@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
-using Vehicle.Repository.Common;
+using Vehicle.Service.Common;
 
 namespace Vehicle.Controllers;
 
@@ -8,19 +9,19 @@ namespace Vehicle.Controllers;
 [ApiController]
 public class VehicleEngineController : ControllerBase
 {
-    private readonly IVehicleEngineRepository _engineRepo;
+    private readonly IVehicleEngineService _engineService;
    
-    public VehicleEngineController(IVehicleEngineRepository engineRepo)
+    public VehicleEngineController(IVehicleEngineService engineService)
     {
-        _engineRepo = engineRepo;
+        _engineService = engineService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngine()
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngine()
     {
         try
         {
-            var engine = await _engineRepo.GetEngine();
+            var engine = await _engineService.GetEngine();
             return Ok(engine);
         }
         catch (Exception)
@@ -29,12 +30,26 @@ public class VehicleEngineController : ControllerBase
         }
     }
 
-    [HttpGet("{type}")]
-    public async Task<ActionResult<IEnumerable<VehicleEngineDTO>>> GetEngineByName(string type)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineById(int id)
     {
         try
         {
-            var engine = await _engineRepo.GetEngineByName(type);
+            var engine = await _engineService.GetEngineById(id);
+            return Ok(engine);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("{type:string}")]
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineByName(string type)
+    {
+        try
+        {
+            var engine = await _engineService.GetEngineByName(type);
             return Ok(engine);
         }
         catch (Exception)
@@ -51,7 +66,7 @@ public class VehicleEngineController : ControllerBase
         
         try
         {
-            await _engineRepo.InsEngine(e);
+            await _engineService.InsEngine(e);
             return Ok(string.Format("Engine inserted. {0}", e.Type));
         }
         catch (Exception)
@@ -67,7 +82,7 @@ public class VehicleEngineController : ControllerBase
             return NotFound();
         try
         {
-            await _engineRepo.DelEngine(id);
+            await _engineService.DelEngine(id);
             return Ok("Engine is deleted");
         }
         catch (Exception)
@@ -83,7 +98,7 @@ public class VehicleEngineController : ControllerBase
             return NotFound();
         try
         {
-            await _engineRepo.UpdEngine(id, UpdEngine);
+            await _engineService.UpdEngine(id, UpdEngine);
             return Ok(string.Format("Engine data updated.\r\nNew Engine name {0}", UpdEngine.Type));
         }
         catch (Exception)

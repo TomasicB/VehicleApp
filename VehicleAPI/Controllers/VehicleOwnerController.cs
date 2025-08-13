@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
-using Vehicle.Repository.Common;
+using Vehicle.Service.Common;
 
 namespace Vehicle.Controllers;
 
@@ -9,19 +9,19 @@ namespace Vehicle.Controllers;
 [ApiController]
 public class VehicleOwnerController : ControllerBase
 {
-    private readonly IVehicleOwnerRepository _ownerRepo;
+    private readonly IVehicleOwnerService _ownerService;
 
-    public VehicleOwnerController(IVehicleOwnerRepository ownerRepo)
+    public VehicleOwnerController(IVehicleOwnerService ownerRepo)
     {
-        _ownerRepo = ownerRepo;
+        _ownerService = ownerRepo;
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwners()
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwners()
     {
         try
         {
-            var owner = await _ownerRepo.GetOwners();
+            var owner = await _ownerService.GetOwners();
             return Ok(owner);
         }
         catch (Exception)
@@ -30,12 +30,26 @@ public class VehicleOwnerController : ControllerBase
         }
     }
 
-    [HttpGet("{name}")]
-    public async Task<ActionResult<IEnumerable<VehicleOwnerDTO>>> GetOwnerById(string name)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerById(int id)
     {
         try
         {
-            var owner = await _ownerRepo.GetOwnerByName(name);
+            var owner = await _ownerService.GetOwnerById(id);
+            return Ok(owner);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("{name:string}")]
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerByName(string name)
+    {
+        try
+        {
+            var owner = await _ownerService.GetOwnerByName(name);
             return Ok(owner);
         }
         catch (Exception)
@@ -52,7 +66,7 @@ public class VehicleOwnerController : ControllerBase
 
         try
         {
-            await _ownerRepo.InsOwner(o);
+            await _ownerService.InsOwner(o);
             return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
         }
         catch (Exception)
@@ -69,7 +83,7 @@ public class VehicleOwnerController : ControllerBase
 
         try
         {
-            await _ownerRepo.DelOwner(id);
+            await _ownerService.DelOwner(id);
             return Ok("Owner is deleted");
         }
         catch (Exception)
@@ -79,14 +93,14 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerWriteDTO UpdOwner)
+    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerDTO UpdOwner)
     {
         if (id == 0)
             return NotFound();
 
         try
         {
-            await _ownerRepo.UpdOwner(id, UpdOwner);
+            await _ownerService.UpdOwner(id, UpdOwner);
             return Ok(string.Format("Owner data updated.\r\n" +
                 "New data: {0}\t{1}",
                 UpdOwner.FirstName, UpdOwner.LastName));

@@ -3,8 +3,9 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.Common;
+using Vehicle.Models.Common.Write;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
 using Vehicle.Repository.Common;
 
 namespace Vehicle.Repository;
@@ -20,7 +21,7 @@ public class VehicleModelRepository : IVehicleModelRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<VehicleModelDTO>> GetModels()
+    public async Task<IEnumerable<IVehicleModel>> GetModels()
     {
         var model = await _context.VehicleModel
             .Include(vm => vm.VehicleMake)
@@ -31,7 +32,19 @@ public class VehicleModelRepository : IVehicleModelRepository
         return model;
     }
 
-    public async Task<IEnumerable<VehicleModelDTO>> GetModelByName(string name)
+    public async Task<IEnumerable<IVehicleModel>> GetModelById(int id)
+    {
+        var model = await _context.VehicleModel
+            .Where(m => m.Id == id)
+            .Include(vm => vm.VehicleMake)
+            .Include(vr => vr.VehicleRegistrations)
+            .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return model;
+    }
+
+    public async Task<IEnumerable<IVehicleModel>> GetModelByName(string name)
     {
         var model = await _context.VehicleModel
             .Where(m => m.Name == name || m.Abrv == name)
@@ -43,7 +56,7 @@ public class VehicleModelRepository : IVehicleModelRepository
         return model;
     }
 
-    public async Task InsModel(VehicleModelDTO m, int makeid)
+    public async Task InsModel(IVehicleModel m, int makeid)
     {
         if (m == null)
             return;
@@ -69,7 +82,7 @@ public class VehicleModelRepository : IVehicleModelRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdModel(int id, VehicleModelWriteDTO UpdModel)
+    public async Task UpdModel(int id, IVehicleModelWrite UpdModel)
     {
         var model = await _context.VehicleModel.FindAsync(id);
         if (model == null)

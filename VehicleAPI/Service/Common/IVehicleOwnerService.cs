@@ -1,7 +1,7 @@
 ﻿using Vehicle.Models.Common;
 
-namespace Vehicle.Repository.Common;
-public interface IVehicleOwnerRepository
+namespace Vehicle.Service.Common;
+public interface IVehicleOwnerService
 {
     Task<IEnumerable<IVehicleOwner>> GetOwners();
 

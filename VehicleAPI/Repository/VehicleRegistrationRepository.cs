@@ -3,8 +3,9 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
 using Vehicle.DAL.Entities;
+using Vehicle.Models.Common;
+using Vehicle.Models.Common.Write;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
 using Vehicle.Repository.Common;
 
 namespace Vehicle.Repository;
@@ -20,7 +21,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<VehicleRegistrationDTO>> GetRegistrations()
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrations()
     {
         var registration = await _context.VehicleRegistration
             .Include(vm => vm.VehicleModel)
@@ -32,7 +33,20 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<VehicleRegistrationDTO>> GetRegistrationByNumber(string number)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int id)
+    {
+        var registration = await _context.VehicleRegistration
+            .Where(r => r.Id == id)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .ProjectTo<VehicleRegistrationDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return registration;
+    }
+
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
@@ -45,7 +59,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task InsRegistration(VehicleRegistrationDTO r, int ModelId, int EngineId, int OwnerId)
+    public async Task InsRegistration(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
     {
         if (r == null)
             return;
@@ -79,7 +93,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdRegistration(int id, VehicleRegistrationWriteDTO UpdRegistration)
+    public async Task UpdRegistration(int id, IVehicleRegistrationWrite UpdRegistration)
     {
         var registration = await _context.VehicleRegistration.FindAsync(id);
         if (registration == null)
