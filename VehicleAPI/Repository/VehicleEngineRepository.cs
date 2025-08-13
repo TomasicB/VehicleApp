@@ -53,37 +53,4 @@ public class VehicleEngineRepository : IVehicleEngineRepository
 
         return engine;
     }
-
-    public async Task InsEngine(IVehicleEngine e)
-    {
-        if (e == null)
-            return;
-
-        var engine = _mapper.Map<VehicleEngine>(e);
-
-        _context.VehicleEngine.Add(engine);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DelEngine(int id)
-    {
-        var engine = await _context.VehicleEngine.FindAsync(id);
-
-        if (engine == null)
-            return;
-
-        _context.VehicleEngine.Remove(engine);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdEngine(int id, IVehicleEngine UpdEngine)
-    {
-        var engine = await _context.VehicleEngine.FindAsync(id);
-        if (engine == null)
-            return;
-
-        engine.Type = UpdEngine.Type;
-        engine.Abrv = UpdEngine.Abrv;
-        await _context.SaveChangesAsync();
-    }
 }

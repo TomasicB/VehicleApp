@@ -16,10 +16,4 @@ public class VehicleEngineService : IVehicleEngineService
     public async Task<IEnumerable<IVehicleEngine>> GetEngineById(int id) => await _engineRepo.GetEngineById(id);
 
     public async Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type) => await _engineRepo.GetEngineByName(type);
-
-    public async Task InsEngine(IVehicleEngine e) => await _engineRepo.InsEngine(e);
-
-    public async Task DelEngine(int id) => await _engineRepo.DelEngine(id);
-
-    public async Task UpdEngine(int id, IVehicleEngine UpdEngine) => await _engineRepo.UpdEngine(id, UpdEngine);
 }

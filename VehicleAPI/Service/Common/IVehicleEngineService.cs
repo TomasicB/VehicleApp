@@ -9,10 +9,4 @@ public interface IVehicleEngineService
     Task<IEnumerable<IVehicleEngine>> GetEngineById(int id);
 
     Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type);
-
-    Task InsEngine(IVehicleEngine e);
-
-    Task DelEngine(int id);
-
-    Task UpdEngine(int id, IVehicleEngine UpdEngine);
 }
