@@ -10,6 +10,8 @@ public interface IVehicleModelRepository
 
     Task<IEnumerable<IVehicleModel>> GetModelByName(string name);
 
+    Task<IEnumerable<IVehicleModel>> GetModelByMake(string make);
+
     Task InsModel(IVehicleModel model, int makeid);
 
     Task DelModel(int id);

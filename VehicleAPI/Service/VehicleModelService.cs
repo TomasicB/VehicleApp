@@ -17,6 +17,8 @@ public class VehicleModelService : IVehicleModelService
 
     public async Task<IEnumerable<IVehicleModel>> GetModelByName(string name) => await _modelRepo.GetModelByName(name);
 
+    public async Task<IEnumerable<IVehicleModel>> GetModelByMake(string make) => await _modelRepo.GetModelByMake(make);
+
     public async Task InsModel(IVehicleModel m, int makeid) => await _modelRepo.InsModel(m, makeid);
 
     public async Task DelModel(int id) => await _modelRepo.DelModel(id);

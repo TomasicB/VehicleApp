@@ -2,21 +2,17 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Vehicle.DAL.Context;
-using Vehicle.DAL.Entities;
-using Vehicle.Models.Common;
-using Vehicle.Models.Common.Write;
 using Vehicle.Repository.Common;
 using Vehicle.Models.DTOs;
-using Vehicle.Models.DTOs.Write;
 
 namespace Vehicle.Repository;
 
 public class VehicleEngineRepository : IVehicleEngineRepository
 {
-    private readonly VehicleDbContext _context;
+    private readonly IVehicleDbContext _context;
     private readonly IMapper _mapper;
 
-    public VehicleEngineRepository(VehicleDbContext context, IMapper mapper)
+    public VehicleEngineRepository(IVehicleDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

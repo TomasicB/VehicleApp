@@ -31,7 +31,7 @@ public class VehicleModelController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("byId")]
     public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelById(int id)
     {
         try
@@ -45,12 +45,26 @@ public class VehicleModelController : ControllerBase
         }
     }
 
-    [HttpGet("{name:string}")]
+    [HttpGet("byName")]
     public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByName(string name)
     {
         try
         {
             var model = await _modelService.GetModelByName(name);
+            return Ok(model);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("byMake")]
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByMake(string make)
+    {
+        try
+        {
+            var model = await _modelService.GetModelByMake(make);
             return Ok(model);
         }
         catch (Exception)

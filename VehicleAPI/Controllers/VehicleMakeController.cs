@@ -30,7 +30,7 @@ public class VehicleMakeController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("byId")]
     public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakeById(int id)
     {
         try
@@ -44,7 +44,7 @@ public class VehicleMakeController : ControllerBase
         }
     }
 
-    [HttpGet("{name:string}")]
+    [HttpGet("byName")]
     public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakeByName(string name)
     {
         try

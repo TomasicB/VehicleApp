@@ -30,7 +30,7 @@ public class VehicleOwnerController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("byId")]
     public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerById(int id)
     {
         try
@@ -44,7 +44,7 @@ public class VehicleOwnerController : ControllerBase
         }
     }
 
-    [HttpGet("{name:string}")]
+    [HttpGet("byName")]
     public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerByName(string name)
     {
         try

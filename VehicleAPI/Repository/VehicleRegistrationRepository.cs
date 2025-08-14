@@ -59,6 +59,45 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByEngine(string engine)
+    {
+        var registration = await _context.VehicleRegistration
+            .Where(r => r.VehicleEngine.Type == engine || r.VehicleEngine.Abrv == engine)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .ProjectTo<VehicleRegistrationDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return registration;
+    }
+
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByModel(string model)
+    {
+        var registration = await _context.VehicleRegistration
+            .Where(r => r.VehicleModel.Name == model || r.VehicleModel.Abrv == model)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .ProjectTo<VehicleRegistrationDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return registration;
+    }
+
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByOwner(string owner)
+    {
+        var registration = await _context.VehicleRegistration
+            .Where(r => r.VehicleOwner.FirstName == owner || r.VehicleOwner.LastName == owner)
+            .Include(vm => vm.VehicleModel)
+            .Include(ve => ve.VehicleEngine)
+            .Include(vo => vo.VehicleOwner)
+            .ProjectTo<VehicleRegistrationDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return registration;
+    }
+
     public async Task InsRegistration(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
     {
         if (r == null)

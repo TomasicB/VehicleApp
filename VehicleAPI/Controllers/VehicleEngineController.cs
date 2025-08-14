@@ -29,7 +29,7 @@ public class VehicleEngineController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("byId")]
     public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineById(int id)
     {
         try
@@ -43,7 +43,7 @@ public class VehicleEngineController : ControllerBase
         }
     }
 
-    [HttpGet("{type:string}")]
+    [HttpGet("byType")]
     public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineByName(string type)
     {
         try

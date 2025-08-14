@@ -31,7 +31,7 @@ public class VehicleRegistrationController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("byId")]
     public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationById(int id)
     {
         try
@@ -45,12 +45,54 @@ public class VehicleRegistrationController : ControllerBase
         }
     }
 
-    [HttpGet("{number:string}")]
+    [HttpGet("byNumber")]
     public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByNumber(string number)
     {
         try
         {
             var registration = await _regService.GetRegistrationByNumber(number);
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("byEngine")]
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByEngine(string engine)
+    {
+        try
+        {
+            var registration = await _regService.GetRegistrationByEngine(engine);
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("byModel")]
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByModel(string model)
+    {
+        try
+        {
+            var registration = await _regService.GetRegistrationByModel(model);
+            return Ok(registration);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpGet("byOwner")]
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByOwner(string owner)
+    {
+        try
+        {
+            var registration = await _regService.GetRegistrationByOwner(owner);
             return Ok(registration);
         }
         catch (Exception)

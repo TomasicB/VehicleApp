@@ -17,6 +17,12 @@ public class VehicleRegistrationService : IVehicleRegistrationService
 
     public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number) => await _registrationRepo.GetRegistrationByNumber(number);
 
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByEngine(string engine) => await _registrationRepo.GetRegistrationByEngine(engine);
+
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByModel(string model) => await _registrationRepo.GetRegistrationByModel(model);
+
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByOwner(string owner) => await _registrationRepo.GetRegistrationByOwner(owner);
+
     public async Task InsRegistration(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId) => await _registrationRepo.InsRegistration(r, ModelId, EngineId, OwnerId);
 
     public async Task DelRegistration(int id) => await _registrationRepo.DelRegistration(id);

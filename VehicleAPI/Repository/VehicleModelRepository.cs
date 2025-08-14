@@ -56,6 +56,18 @@ public class VehicleModelRepository : IVehicleModelRepository
         return model;
     }
 
+    public async Task<IEnumerable<IVehicleModel>> GetModelByMake(string make)
+    {
+        var model = await _context.VehicleModel
+            .Where(m => m.VehicleMake.Name == make || m.VehicleMake.Abrv == make)
+            .Include(vm => vm.VehicleMake)
+            .Include(vr => vr.VehicleRegistrations)
+            .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return model;
+    }
+
     public async Task InsModel(IVehicleModel m, int makeid)
     {
         if (m == null)
