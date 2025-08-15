@@ -4,7 +4,7 @@ using Vehicle.DAL.Entities;
 
 namespace Vehicle.DAL.Context;
 
-public interface IVehicleDbContext
+public interface IVehicleDbContext : IDisposable
 {
     public DbSet<VehicleOwner> VehicleOwner { get; set; }
 

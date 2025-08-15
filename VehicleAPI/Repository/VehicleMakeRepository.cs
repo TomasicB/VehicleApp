@@ -58,9 +58,9 @@ public class VehicleMakeRepository : IVehicleMakeRepository
             return;
 
         var make = _mapper.Map<VehicleMake>(m);
-
         _context.VehicleMake.Add(make);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task DelMake(int id)
@@ -71,7 +71,8 @@ public class VehicleMakeRepository : IVehicleMakeRepository
             return;
 
         _context.VehicleMake.Remove(make);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task UpdMake(int id, IVehicleMake UpdMake)
@@ -82,6 +83,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
 
         make.Name = UpdMake.Name;
         make.Abrv = UpdMake.Abrv;
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 }

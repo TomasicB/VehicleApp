@@ -7,21 +7,33 @@ namespace Vehicle.Service;
 
 public class VehicleModelService : IVehicleModelService
 {
-    private readonly IVehicleModelRepository _modelRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public VehicleModelService(IVehicleModelRepository modelRepo) => _modelRepo = modelRepo;
+    public VehicleModelService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-    public async Task<IEnumerable<IVehicleModel>> GetModels() => await _modelRepo.GetModels();
+    public async Task<IEnumerable<IVehicleModel>> GetModels() => await _unitOfWork.ModelRepo.GetModels();
 
-    public async Task<IEnumerable<IVehicleModel>> GetModelById(int id) => await _modelRepo.GetModelById(id);
+    public async Task<IEnumerable<IVehicleModel>> GetModelById(int id) => await _unitOfWork.ModelRepo.GetModelById(id);
 
-    public async Task<IEnumerable<IVehicleModel>> GetModelByName(string name) => await _modelRepo.GetModelByName(name);
+    public async Task<IEnumerable<IVehicleModel>> GetModelByName(string name) => await _unitOfWork.ModelRepo.GetModelByName(name);
 
-    public async Task<IEnumerable<IVehicleModel>> GetModelByMake(string make) => await _modelRepo.GetModelByMake(make);
+    public async Task<IEnumerable<IVehicleModel>> GetModelByMake(string make) => await _unitOfWork.ModelRepo.GetModelByMake(make);
 
-    public async Task InsModel(IVehicleModel m, int makeid) => await _modelRepo.InsModel(m, makeid);
+    public async Task InsModel(IVehicleModel m, int makeid)
+    {
+        await _unitOfWork.ModelRepo.InsModel(m, makeid);
+        await _unitOfWork.CommitAsync();
+    }
 
-    public async Task DelModel(int id) => await _modelRepo.DelModel(id);
+    public async Task DelModel(int id)
+    {
+        await _unitOfWork.ModelRepo.DelModel(id);
+        await _unitOfWork.CommitAsync();
+    }
 
-    public async Task UpdModel(int id, IVehicleModelWrite UpdModel) => await _modelRepo.UpdModel(id, UpdModel);
+    public async Task UpdModel(int id, IVehicleModelWrite UpdModel)
+    {
+        await _unitOfWork.ModelRepo.UpdModel(id, UpdModel);
+        await _unitOfWork.CommitAsync();
+    }
 }

@@ -116,9 +116,9 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
             return;
 
         var registration = _mapper.Map<VehicleRegistration>(r);
-
         _context.VehicleRegistration.Add(registration);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task DelRegistration(int id)
@@ -129,7 +129,8 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
             return;
 
         _context.VehicleRegistration.Remove(registration);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task UpdRegistration(int id, IVehicleRegistrationWrite UpdRegistration)
@@ -142,6 +143,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         registration.VehicleEngineId = UpdRegistration.VehicleEngine.Id;
         registration.VehicleModelId = UpdRegistration.VehicleModel.Id;
         registration.VehicleOwnerId = UpdRegistration.VehicleOwner.Id;
-        await _context.SaveChangesAsync();
+        
+        await Task.CompletedTask;
     }
 }

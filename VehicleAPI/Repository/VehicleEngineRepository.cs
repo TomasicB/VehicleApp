@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Vehicle.DAL.Context;
-using Vehicle.Repository.Common;
+using Vehicle.Models.Common;
 using Vehicle.Models.DTOs;
+using Vehicle.Repository.Common;
 
 namespace Vehicle.Repository;
 
@@ -18,7 +19,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<VehicleEngineDTO>> GetEngine()
+    public async Task<IEnumerable<IVehicleEngine>> GetEngine()
     {
         var engine = await _context.VehicleEngine
             .Include(vr => vr.VehicleRegistrations)
@@ -28,7 +29,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
-    public async Task<IEnumerable<VehicleEngineDTO>> GetEngineById(int id)
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineById(int id)
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Id == id)
@@ -39,7 +40,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
-    public async Task<IEnumerable<VehicleEngineDTO>> GetEngineByName(string type)
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type)
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Type == type || e.Abrv == type)

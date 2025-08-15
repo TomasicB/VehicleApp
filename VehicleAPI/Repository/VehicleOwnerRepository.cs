@@ -58,9 +58,9 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
             return;
 
         var owner = _mapper.Map<VehicleOwner>(o);
-
         _context.VehicleOwner.Add(owner);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task DelOwner(int id)
@@ -71,7 +71,8 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
             return;
 
         _context.VehicleOwner.Remove(owner);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task UpdOwner(int id, IVehicleOwner UpdOwner)
@@ -83,6 +84,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         owner.FirstName= UpdOwner.FirstName;
         owner.LastName= UpdOwner.LastName;
         owner.DOB= UpdOwner.DOB;
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 }

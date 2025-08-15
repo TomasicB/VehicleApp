@@ -78,9 +78,9 @@ public class VehicleModelRepository : IVehicleModelRepository
             return;
 
         var model = _mapper.Map<VehicleModel>(m);
-
         _context.VehicleModel.Add(model);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task DelModel(int id)
@@ -91,7 +91,8 @@ public class VehicleModelRepository : IVehicleModelRepository
             return;
 
         _context.VehicleModel.Remove(m);
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 
     public async Task UpdModel(int id, IVehicleModelWrite UpdModel)
@@ -103,6 +104,7 @@ public class VehicleModelRepository : IVehicleModelRepository
         model.Name = UpdModel.Name;
         model.Abrv = UpdModel.Abrv;
         model.VehicleMakeId = UpdModel.VehicleMake.Id;
-        await _context.SaveChangesAsync();
+
+        await Task.CompletedTask;
     }
 }
