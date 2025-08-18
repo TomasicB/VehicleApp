@@ -12,9 +12,9 @@ public class VehicleRegistrationController : ControllerBase
 {
     private readonly IVehicleRegistrationService _regService;
 
-    public VehicleRegistrationController(IVehicleRegistrationService regRepo)
+    public VehicleRegistrationController(IVehicleRegistrationService regService)
     {
-        _regService = regRepo;
+        _regService = regService;
     }
 
     [HttpGet]

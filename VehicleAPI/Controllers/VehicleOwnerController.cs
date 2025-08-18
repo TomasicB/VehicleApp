@@ -11,9 +11,9 @@ public class VehicleOwnerController : ControllerBase
 {
     private readonly IVehicleOwnerService _ownerService;
 
-    public VehicleOwnerController(IVehicleOwnerService ownerRepo)
+    public VehicleOwnerController(IVehicleOwnerService ownerService)
     {
-        _ownerService = ownerRepo;
+        _ownerService = ownerService;
     }
     
     [HttpGet]
