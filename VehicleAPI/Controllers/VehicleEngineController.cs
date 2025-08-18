@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+//using System.Web.Mvc;
 using Vehicle.Models.Common;
 using Vehicle.Service.Common;
 
@@ -16,11 +17,11 @@ public class VehicleEngineController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngine()
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEnginesAsync()
     {
         try
         {
-            var engine = await _engineService.GetEngine();
+            var engine = await _engineService.GetEngineAsync();
             return Ok(engine);
         }
         catch (Exception)
@@ -30,11 +31,11 @@ public class VehicleEngineController : ControllerBase
     }
 
     [HttpGet("byId")]
-    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineById(int id)
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineByIdAsync(int id)
     {
         try
         {
-            var engine = await _engineService.GetEngineById(id);
+            var engine = await _engineService.GetEngineByIdAsync(id);
             return Ok(engine);
         }
         catch (Exception)
@@ -44,11 +45,11 @@ public class VehicleEngineController : ControllerBase
     }
 
     [HttpGet("byType")]
-    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineByName(string type)
+    public async Task<ActionResult<IEnumerable<IVehicleEngine>>> GetEngineByNameAsync(string type)
     {
         try
         {
-            var engine = await _engineService.GetEngineByName(type);
+            var engine = await _engineService.GetEngineByNameAsync(type);
             return Ok(engine);
         }
         catch (Exception)

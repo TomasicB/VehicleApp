@@ -18,11 +18,11 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModels()
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelsAsync()
     {
         try
         {
-            var model = await _modelService.GetModels();
+            var model = await _modelService.GetModelsAsync();
             return Ok(model);
         }
         catch (Exception)
@@ -32,11 +32,11 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpGet("byId")]
-    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelById(int id)
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByIdAsync(int id)
     {
         try
         {
-            var model = await _modelService.GetModelById(id);
+            var model = await _modelService.GetModelByIdAsync(id);
             return Ok(model);
         }
         catch (Exception)
@@ -46,11 +46,11 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpGet("byName")]
-    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByName(string name)
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelsByNameAsync(string name)
     {
         try
         {
-            var model = await _modelService.GetModelByName(name);
+            var model = await _modelService.GetModelsByNameAsync(name);
             return Ok(model);
         }
         catch (Exception)
@@ -60,11 +60,11 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpGet("byMake")]
-    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelByMake(string make)
+    public async Task<ActionResult<IEnumerable<IVehicleModel>>> GetModelsByMakeAsync(string make)
     {
         try
         {
-            var model = await _modelService.GetModelByMake(make);
+            var model = await _modelService.GetModelsByMakeAsync(make);
             return Ok(model);
         }
         catch (Exception)
@@ -74,17 +74,18 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsModel([FromBody] VehicleModelDTO m, int makeid)
+    public async Task<ActionResult> InsertModelAsync([FromBody] VehicleModelDTO m, int makeid)
     {
         if (m == null)
-            return BadRequest("Model is not entered.");
+
+            throw new ApplicationException("Model is not entered.");
 
         if (makeid == 0)
-            return BadRequest("Make is not entered.");
+            throw new ApplicationException("Make is not entered.");
 
         try
         {
-            await _modelService.InsModel(m, makeid);
+            await _modelService.InsertModelAsync(m, makeid);
             return Ok(string.Format("Model inserted. ({1}){0}", m.Name, m.Name));
         }
         catch (Exception)
@@ -94,14 +95,14 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DelModel(int id)
+    public async Task<ActionResult> DeleteModelAsync(int id)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Model is not found");
 
         try
         {
-            await _modelService.DelModel(id);
+            await _modelService.DeleteModelAsync(id);
             return Ok("Model is deleted");
         }
         catch (Exception)
@@ -111,14 +112,14 @@ public class VehicleModelController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdModel(int id, [FromBody] VehicleModelWriteDTO UpdModel)
+    public async Task<ActionResult> UpdateModelAsync(int id, [FromBody] VehicleModelWriteDTO UpdModel)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Model is not found");
 
         try
         {
-            await _modelService.UpdModel(id, UpdModel);
+            await _modelService.UpdateModelAsync(id, UpdModel);
             return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));
         }
         catch (Exception)

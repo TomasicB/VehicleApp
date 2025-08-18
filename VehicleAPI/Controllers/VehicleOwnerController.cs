@@ -17,11 +17,11 @@ public class VehicleOwnerController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwners()
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnersAsync()
     {
         try
         {
-            var owner = await _ownerService.GetOwners();
+            var owner = await _ownerService.GetOwnersAsync();
             return Ok(owner);
         }
         catch (Exception)
@@ -31,11 +31,11 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpGet("byId")]
-    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerById(int id)
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerByIdAsync(int id)
     {
         try
         {
-            var owner = await _ownerService.GetOwnerById(id);
+            var owner = await _ownerService.GetOwnerByIdAsync(id);
             return Ok(owner);
         }
         catch (Exception)
@@ -45,11 +45,11 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpGet("byName")]
-    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnerByName(string name)
+    public async Task<ActionResult<IEnumerable<IVehicleOwner>>> GetOwnersByNameAsync(string name)
     {
         try
         {
-            var owner = await _ownerService.GetOwnerByName(name);
+            var owner = await _ownerService.GetOwnersByNameAsync(name);
             return Ok(owner);
         }
         catch (Exception)
@@ -59,14 +59,14 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsOwner([FromBody] VehicleOwnerDTO o)
+    public async Task<ActionResult> InsertOwnerAsync([FromBody] VehicleOwnerDTO o)
     {
         if (o == null)
-            return BadRequest("Owner is not entered.");
+            throw new ApplicationException("Owner is not entered.");
 
         try
         {
-            await _ownerService.InsOwner(o);
+            await _ownerService.InsertOwnerAsync(o);
             return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
         }
         catch (Exception)
@@ -76,14 +76,14 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DelOwner(int id)
+    public async Task<ActionResult> DeleteOwnerAsync(int id)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Owner is not found");
 
         try
         {
-            await _ownerService.DelOwner(id);
+            await _ownerService.DeleteOwnerAsync(id);
             return Ok("Owner is deleted");
         }
         catch (Exception)
@@ -93,14 +93,14 @@ public class VehicleOwnerController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdOwner(int id, [FromBody] VehicleOwnerDTO UpdOwner)
+    public async Task<ActionResult> UpdateOwnerAsync(int id, [FromBody] VehicleOwnerDTO UpdOwner)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Owner is not found");
 
         try
         {
-            await _ownerService.UpdOwner(id, UpdOwner);
+            await _ownerService.UpdateOwnerAsync(id, UpdOwner);
             return Ok(string.Format("Owner data updated.\r\n" +
                 "New data: {0}\t{1}",
                 UpdOwner.FirstName, UpdOwner.LastName));

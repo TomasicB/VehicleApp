@@ -20,7 +20,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<IVehicleMake>> GetMake()
+    public async Task<IEnumerable<IVehicleMake>> GetMakeAsync()
     {
         var make = await _context.VehicleMake
             .Include(vm => vm.VehicleModels)
@@ -30,7 +30,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         return make;
     }
 
-    public async Task<IEnumerable<IVehicleMake>> GetMakeById(int id)
+    public async Task<IEnumerable<IVehicleMake>> GetMakeByIdAsync(int id)
     {
         var make = await _context.VehicleMake
             .Where(m => m.Id == id)
@@ -41,7 +41,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         return make;
     }
 
-    public async Task<IEnumerable<IVehicleMake>> GetMakeByName(string name)
+    public async Task<IEnumerable<IVehicleMake>> GetMakesByNameAsync(string name)
     {
         var make = await _context.VehicleMake
             .Where(m => m.Name == name || m.Abrv == name)
@@ -52,7 +52,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         return make;
     }
 
-    public async Task InsMake(IVehicleMake m)
+    public async Task InsertMakeAsync(IVehicleMake m)
     {
         if (m == null)
             return;
@@ -63,7 +63,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         await Task.CompletedTask;
     }
 
-    public async Task DelMake(int id)
+    public async Task DeleteMakeAsync(int id)
     {
         var make = await _context.VehicleMake.FindAsync(id);
 
@@ -75,7 +75,7 @@ public class VehicleMakeRepository : IVehicleMakeRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdMake(int id, IVehicleMake UpdMake)
+    public async Task UpdateMakeAsync(int id, IVehicleMake UpdMake)
     {
         var make = await _context.VehicleMake.FindAsync(id);
         if (make == null)

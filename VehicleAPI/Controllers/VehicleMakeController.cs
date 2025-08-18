@@ -17,11 +17,11 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMake()
+    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakesAsync()
     {
         try
         {
-            var make = await _makeService.GetMake();
+            var make = await _makeService.GetMakeAsync();
             return Ok(make);
         }
         catch (Exception)
@@ -31,11 +31,11 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpGet("byId")]
-    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakeById(int id)
+    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakeByIdAsync(int id)
     {
         try
         {
-            var make = await _makeService.GetMakeById(id);
+            var make = await _makeService.GetMakeByIdAsync(id);
             return Ok(make);
         }
         catch (Exception)
@@ -45,11 +45,11 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpGet("byName")]
-    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakeByName(string name)
+    public async Task<ActionResult<IEnumerable<IVehicleMake>>> GetMakesByNameAsync(string name)
     {
         try
         { 
-            var make = await _makeService.GetMakeByName(name);
+            var make = await _makeService.GetMakesByNameAsync(name);
             return Ok(make);
         }
         catch (Exception)
@@ -59,14 +59,14 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsMake([FromBody] VehicleMakeDTO m)
+    public async Task<ActionResult> InsertMakeAsync([FromBody] VehicleMakeDTO m)
     {
         if (m == null)
-            return BadRequest("Make is not entered.");
+            throw new ApplicationException("Make is not entered.");
 
         try
         {
-            await _makeService.InsMake(m);
+            await _makeService.InsertMakeAsync(m);
             return Ok(string.Format("Make inserted. {0}", m.Name));
         }
         catch (Exception) 
@@ -77,14 +77,14 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DelMake(int id)
+    public async Task<ActionResult> DeleteMakeAsync(int id)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Make is not found");
 
         try
         {
-            await _makeService.DelMake(id);
+            await _makeService.DeleteMakeAsync(id);
             return Ok("Make is deleted");
         }
         catch (Exception) 
@@ -94,13 +94,13 @@ public class VehicleMakeController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdMake(int id, [FromBody] VehicleMakeDTO UpdMake)
+    public async Task<ActionResult> UpdateMakeAsync(int id, [FromBody] VehicleMakeDTO UpdMake)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Make is not found");
         try
         {
-            await _makeService.UpdMake(id, UpdMake);
+            await _makeService.UpdateMakeAsync(id, UpdMake);
             return Ok(string.Format("Make data updated.\r\nNew make name {0}", UpdMake.Name));
         }
         catch (Exception)

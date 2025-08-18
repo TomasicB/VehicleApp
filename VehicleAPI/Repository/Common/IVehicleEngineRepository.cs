@@ -5,9 +5,9 @@ namespace Vehicle.Repository.Common;
 
 public interface IVehicleEngineRepository
 {
-    Task<IEnumerable<IVehicleEngine>> GetEngine();
+    Task<IEnumerable<IVehicleEngine>> GetEngineAsync();
 
-    Task<IEnumerable<IVehicleEngine>> GetEngineById(int id);
+    Task<IEnumerable<IVehicleEngine>> GetEngineByIdAsync(int id);
 
-    Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type);
+    Task<IEnumerable<IVehicleEngine>> GetEngineByNameAsync(string type);
 }

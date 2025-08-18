@@ -4,15 +4,15 @@ namespace Vehicle.Service.Common;
 
 public interface IVehicleMakeService
 {
-    Task<IEnumerable<IVehicleMake>> GetMake();
+    Task<IEnumerable<IVehicleMake>> GetMakeAsync();
 
-    Task<IEnumerable<IVehicleMake>> GetMakeById(int id);
+    Task<IEnumerable<IVehicleMake>> GetMakeByIdAsync(int id);
 
-    Task<IEnumerable<IVehicleMake>> GetMakeByName(string name);
+    Task<IEnumerable<IVehicleMake>> GetMakesByNameAsync(string name);
 
-    Task InsMake(IVehicleMake make);
+    Task InsertMakeAsync(IVehicleMake make);
 
-    Task DelMake(int id);
+    Task DeleteMakeAsync(int id);
 
-    Task UpdMake(int id, IVehicleMake UpdMake);
+    Task UpdateMakeAsync(int id, IVehicleMake UpdMake);
 }

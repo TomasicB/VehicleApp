@@ -20,7 +20,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwners()
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnersAsync()
     {
         var owner = await _context.VehicleOwner
             .Include(vr => vr.VehicleRegistrations)
@@ -30,7 +30,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         return owner;
     }
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwnerById(int id)
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByIdAsync(int id)
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.Id == id)
@@ -41,7 +41,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         return owner;
     }
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name)
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnersByNameAsync(string name)
     {
         var owner = await _context.VehicleOwner
             .Where(o => o.FirstName == name || o.LastName == name)
@@ -52,7 +52,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         return owner;
     }
 
-    public async Task InsOwner(IVehicleOwner o)
+    public async Task InsertOwnerAsync(IVehicleOwner o)
     {
         if (o == null)
             return;
@@ -63,7 +63,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         await Task.CompletedTask;
     }
 
-    public async Task DelOwner(int id)
+    public async Task DeleteOwnerAsync(int id)
     {
         var owner = await _context.VehicleOwner.FindAsync(id);
 
@@ -75,7 +75,7 @@ public class VehicleOwnerRepository : IVehicleOwnerRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdOwner(int id, IVehicleOwner UpdOwner)
+    public async Task UpdateOwnerAsync(int id, IVehicleOwner UpdOwner)
     {
         var owner = await _context.VehicleOwner.FindAsync(id);
         if (owner == null)

@@ -21,7 +21,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrations()
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsAsync()
     {
         var registration = await _context.VehicleRegistration
             .Include(vm => vm.VehicleModel)
@@ -33,7 +33,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int id)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByIdAsync(int id)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.Id == id)
@@ -46,7 +46,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumberAsync(string number)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.RegistrationNumber == number || r.RegistrationNumber == number)
@@ -59,7 +59,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByEngine(string engine)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByEngineAsync(string engine)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.VehicleEngine.Type == engine || r.VehicleEngine.Abrv == engine)
@@ -72,7 +72,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByModel(string model)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByModelAsync(string model)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.VehicleModel.Name == model || r.VehicleModel.Abrv == model)
@@ -85,7 +85,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByOwner(string owner)
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByOwnerAsync(string owner)
     {
         var registration = await _context.VehicleRegistration
             .Where(r => r.VehicleOwner.FirstName == owner || r.VehicleOwner.LastName == owner)
@@ -98,7 +98,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         return registration;
     }
 
-    public async Task InsRegistration(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
+    public async Task InsertRegistrationAsync(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
     {
         if (r == null)
             return;
@@ -121,7 +121,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         await Task.CompletedTask;
     }
 
-    public async Task DelRegistration(int id)
+    public async Task DeleteRegistrationAsync(int id)
     {
         var registration = await _context.VehicleRegistration.FindAsync(id);
 
@@ -133,7 +133,7 @@ public class VehicleRegistrationRepository : IVehicleRegistrationRepository
         await Task.CompletedTask;
     }
 
-    public async Task UpdRegistration(int id, IVehicleRegistrationWrite UpdRegistration)
+    public async Task UpdateRegistrationAsync(int id, IVehicleRegistrationWrite UpdRegistration)
     {
         var registration = await _context.VehicleRegistration.FindAsync(id);
         if (registration == null)

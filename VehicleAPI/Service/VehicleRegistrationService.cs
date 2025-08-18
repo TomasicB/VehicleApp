@@ -11,33 +11,33 @@ public class VehicleRegistrationService : IVehicleRegistrationService
 
     public VehicleRegistrationService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrations() => await _unitOfWork.RegRepo.GetRegistrations();
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsAsync() => await _unitOfWork.RegRepo.GetRegistrationsAsync();
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int id) => await _unitOfWork.RegRepo.GetRegistrationById(id);
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByIdAsync(int id) => await _unitOfWork.RegRepo.GetRegistrationByIdAsync(id);
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number) => await _unitOfWork.RegRepo.GetRegistrationByNumber(number);
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumberAsync(string number) => await _unitOfWork.RegRepo.GetRegistrationByNumberAsync(number);
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByEngine(string engine) => await _unitOfWork.RegRepo.GetRegistrationByEngine(engine);
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByEngineAsync(string engine) => await _unitOfWork.RegRepo.GetRegistrationsByEngineAsync(engine);
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByModel(string model) => await _unitOfWork.RegRepo.GetRegistrationByModel(model);
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByModelAsync(string model) => await _unitOfWork.RegRepo.GetRegistrationsByModelAsync(model);
 
-    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationByOwner(string owner) => await _unitOfWork.RegRepo.GetRegistrationByOwner(owner);
+    public async Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByOwnerAsync(string owner) => await _unitOfWork.RegRepo.GetRegistrationsByOwnerAsync(owner);
 
-    public async Task InsRegistration(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
+    public async Task InsertRegistrationAsync(IVehicleRegistration r, int ModelId, int EngineId, int OwnerId)
     {
-        await _unitOfWork.RegRepo.InsRegistration(r, ModelId, EngineId, OwnerId);
+        await _unitOfWork.RegRepo.InsertRegistrationAsync(r, ModelId, EngineId, OwnerId);
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task DelRegistration(int id)
+    public async Task DeleteRegistrationAsync(int id)
     {
-        await _unitOfWork.RegRepo.DelRegistration(id);
+        await _unitOfWork.RegRepo.DeleteRegistrationAsync(id);
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task UpdRegistration(int id, IVehicleRegistrationWrite UpdRegistration)
+    public async Task UpdateRegistrationAsync(int id, IVehicleRegistrationWrite UpdRegistration)
     {
-        await _unitOfWork.RegRepo.UpdRegistration(id, UpdRegistration);
+        await _unitOfWork.RegRepo.UpdateRegistrationAsync(id, UpdRegistration);
         await _unitOfWork.CommitAsync();
     }
 }

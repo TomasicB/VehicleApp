@@ -3,15 +3,15 @@
 namespace Vehicle.Service.Common;
 public interface IVehicleOwnerService
 {
-    Task<IEnumerable<IVehicleOwner>> GetOwners();
+    Task<IEnumerable<IVehicleOwner>> GetOwnersAsync();
 
-    Task<IEnumerable<IVehicleOwner>> GetOwnerById(int id);
+    Task<IEnumerable<IVehicleOwner>> GetOwnerByIdAsync(int id);
 
-    Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name);
+    Task<IEnumerable<IVehicleOwner>> GetOwnersByNameAsync(string name);
 
-    Task InsOwner(IVehicleOwner o);
+    Task InsertOwnerAsync(IVehicleOwner o);
 
-    Task DelOwner(int id);
+    Task DeleteOwnerAsync(int id);
 
-    Task UpdOwner(int id, IVehicleOwner UpdOwner);
+    Task UpdateOwnerAsync(int id, IVehicleOwner UpdOwner);
 }

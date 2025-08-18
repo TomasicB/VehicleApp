@@ -18,11 +18,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrations()
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationsAsync()
     {
         try
         {
-            var registration = await _regService.GetRegistrations();
+            var registration = await _regService.GetRegistrationsAsync();
             return Ok(registration);
         }
         catch (Exception)
@@ -32,11 +32,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("byId")]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationById(int id)
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByIdAsync(int id)
     {
         try
         {
-            var registration = await _regService.GetRegistrationById(id);
+            var registration = await _regService.GetRegistrationByIdAsync(id);
             return Ok(registration);
         }
         catch (Exception)
@@ -46,11 +46,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("byNumber")]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByNumber(string number)
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByNumberAsync(string number)
     {
         try
         {
-            var registration = await _regService.GetRegistrationByNumber(number);
+            var registration = await _regService.GetRegistrationByNumberAsync(number);
             return Ok(registration);
         }
         catch (Exception)
@@ -60,11 +60,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("byEngine")]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByEngine(string engine)
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationsByEngineAsync(string engine)
     {
         try
         {
-            var registration = await _regService.GetRegistrationByEngine(engine);
+            var registration = await _regService.GetRegistrationsByEngineAsync(engine);
             return Ok(registration);
         }
         catch (Exception)
@@ -74,11 +74,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("byModel")]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByModel(string model)
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationsByModelAsync(string model)
     {
         try
         {
-            var registration = await _regService.GetRegistrationByModel(model);
+            var registration = await _regService.GetRegistrationsByModelAsync(model);
             return Ok(registration);
         }
         catch (Exception)
@@ -88,11 +88,11 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpGet("byOwner")]
-    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationByOwner(string owner)
+    public async Task<ActionResult<IEnumerable<IVehicleRegistration>>> GetRegistrationsByOwnerAsync(string owner)
     {
         try
         {
-            var registration = await _regService.GetRegistrationByOwner(owner);
+            var registration = await _regService.GetRegistrationsByOwnerAsync(owner);
             return Ok(registration);
         }
         catch (Exception)
@@ -102,23 +102,23 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> InsRegistration([FromBody] VehicleRegistrationDTO r, int ModelId, int EngineId, int OwnerId)
+    public async Task<ActionResult> InsertRegistrationAsync([FromBody] VehicleRegistrationDTO r, int ModelId, int EngineId, int OwnerId)
     {
         if (r == null)
-            return BadRequest("Registration is not entered.");
+            throw new ApplicationException("Registration is not entered.");
 
         if (ModelId == 0)
-            return BadRequest("Model is not entered.");
+            throw new ApplicationException("Model is not entered.");
 
         if (EngineId == 0)
-            return BadRequest("Engine is not entered.");
+            throw new ApplicationException("Engine is not entered.");
 
         if (OwnerId == 0)
-            return BadRequest("Owner is not entered.");
+            throw new ApplicationException("Owner is not entered.");
 
         try
         {
-            await _regService.InsRegistration(r, ModelId, EngineId, OwnerId);
+            await _regService.InsertRegistrationAsync(r, ModelId, EngineId, OwnerId);
             return Ok(string.Format("Registration inserted. {0}", r.RegistrationNumber));
         }
         catch (Exception)
@@ -128,14 +128,14 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DelRegistration(int id)
+    public async Task<ActionResult> DeleteRegistrationAsync(int id)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Reginstration is not found");
 
         try
         {
-            await _regService.DelRegistration(id);
+            await _regService.DeleteRegistrationAsync(id);
             return Ok("Registration is deleted");
         }
         catch (Exception)
@@ -145,14 +145,14 @@ public class VehicleRegistrationController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdRegistration(int id, [FromBody] VehicleRegistrationWriteDTO UpdRegistration)
+    public async Task<ActionResult> UpdateRegistrationAsync(int id, [FromBody] VehicleRegistrationWriteDTO UpdRegistration)
     {
         if (id == 0)
-            return NotFound();
+            throw new ApplicationException("Registration is not found");
 
         try
         {
-            await _regService.UpdRegistration(id, UpdRegistration);
+            await _regService.UpdateRegistrationAsync(id, UpdRegistration);
             return Ok(string.Format("Registration data updated.\r\nNew Registration noumber {0}", UpdRegistration.RegistrationNumber));
         }
         catch (Exception)

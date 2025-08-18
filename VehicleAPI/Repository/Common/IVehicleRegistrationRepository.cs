@@ -4,21 +4,21 @@ using Vehicle.Models.Common.Write;
 namespace Vehicle.Repository.Common;
 public interface IVehicleRegistrationRepository
 {
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrations();
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationsAsync();
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationById(int Id);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByIdAsync(int Id);
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumber(string number);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByNumberAsync(string number);
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByEngine(string engine);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByEngineAsync(string engine);
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByModel(string model);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByModelAsync(string model);
 
-    Task<IEnumerable<IVehicleRegistration>> GetRegistrationByOwner(string owner);
+    Task<IEnumerable<IVehicleRegistration>> GetRegistrationsByOwnerAsync(string owner);
 
-    Task InsRegistration(IVehicleRegistration registration, int ModelId, int EngineId, int OwnerId);
+    Task InsertRegistrationAsync(IVehicleRegistration registration, int ModelId, int EngineId, int OwnerId);
          
-    Task DelRegistration(int id);
+    Task DeleteRegistrationAsync(int id);
          
-    Task UpdRegistration(int id, IVehicleRegistrationWrite UpdRegistration);
+    Task UpdateRegistrationAsync(int id, IVehicleRegistrationWrite UpdRegistration);
 }

@@ -4,17 +4,17 @@ using Vehicle.Models.Common.Write;
 namespace Vehicle.Repository.Common;
 public interface IVehicleModelRepository
 {
-    Task<IEnumerable<IVehicleModel>> GetModels();
+    Task<IEnumerable<IVehicleModel>> GetModelsAsync();
 
-    Task<IEnumerable<IVehicleModel>> GetModelById(int id);
+    Task<IEnumerable<IVehicleModel>> GetModelByIdAsync(int id);
 
-    Task<IEnumerable<IVehicleModel>> GetModelByName(string name);
+    Task<IEnumerable<IVehicleModel>> GetModelsByNameAsync(string name);
 
-    Task<IEnumerable<IVehicleModel>> GetModelByMake(string make);
+    Task<IEnumerable<IVehicleModel>> GetModelsByMakeAsync(string make);
 
-    Task InsModel(IVehicleModel model, int makeid);
+    Task InsertModelAsync(IVehicleModel model, int makeid);
 
-    Task DelModel(int id);
+    Task DeleteModelAsync(int id);
 
-    Task UpdModel(int id, IVehicleModelWrite UpdModel);
+    Task UpdateModelAsync(int id, IVehicleModelWrite UpdModel);
 }

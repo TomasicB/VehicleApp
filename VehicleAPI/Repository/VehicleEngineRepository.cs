@@ -19,7 +19,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<IVehicleEngine>> GetEngine()
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineAsync()
     {
         var engine = await _context.VehicleEngine
             .Include(vr => vr.VehicleRegistrations)
@@ -29,7 +29,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
-    public async Task<IEnumerable<IVehicleEngine>> GetEngineById(int id)
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineByIdAsync(int id)
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Id == id)
@@ -40,7 +40,7 @@ public class VehicleEngineRepository : IVehicleEngineRepository
         return engine;
     }
 
-    public async Task<IEnumerable<IVehicleEngine>> GetEngineByName(string type)
+    public async Task<IEnumerable<IVehicleEngine>> GetEngineByNameAsync(string type)
     {
         var engine = await _context.VehicleEngine
             .Where(e => e.Type == type || e.Abrv == type)

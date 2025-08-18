@@ -10,27 +10,27 @@ public class VehicleOwnerService : IVehicleOwnerService
 
     public VehicleOwnerService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwners() => await _unitOfWork.OwnerRepo.GetOwners();
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnersAsync() => await _unitOfWork.OwnerRepo.GetOwnersAsync();
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwnerById(int id) => await _unitOfWork.OwnerRepo.GetOwnerById(id);
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByIdAsync(int id) => await _unitOfWork.OwnerRepo.GetOwnerByIdAsync(id);
 
-    public async Task<IEnumerable<IVehicleOwner>> GetOwnerByName(string name) => await _unitOfWork.OwnerRepo.GetOwnerByName(name);
+    public async Task<IEnumerable<IVehicleOwner>> GetOwnersByNameAsync(string name) => await _unitOfWork.OwnerRepo.GetOwnersByNameAsync(name);
 
-    public async Task InsOwner(IVehicleOwner o)
+    public async Task InsertOwnerAsync(IVehicleOwner o)
     {
-        await _unitOfWork.OwnerRepo.InsOwner(o);
+        await _unitOfWork.OwnerRepo.InsertOwnerAsync(o);
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task DelOwner(int id)
+    public async Task DeleteOwnerAsync(int id)
     {
-        await _unitOfWork.OwnerRepo.DelOwner(id);
+        await _unitOfWork.OwnerRepo.DeleteOwnerAsync(id);
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task UpdOwner(int id, IVehicleOwner UpdOwner)
+    public async Task UpdateOwnerAsync(int id, IVehicleOwner UpdOwner)
     {
-        await _unitOfWork.OwnerRepo.UpdOwner(id, UpdOwner);
+        await _unitOfWork.OwnerRepo.UpdateOwnerAsync(id, UpdOwner);
         await _unitOfWork.CommitAsync();
     }
 }
