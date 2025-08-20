@@ -38,9 +38,9 @@ public class VehicleOwnerController : ControllerBase
             var owner = await _ownerService.GetOwnerByIdAsync(id);
             return Ok(owner);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -52,9 +52,9 @@ public class VehicleOwnerController : ControllerBase
             var owner = await _ownerService.GetOwnersByNameAsync(name);
             return Ok(owner);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -69,9 +69,9 @@ public class VehicleOwnerController : ControllerBase
             await _ownerService.InsertOwnerAsync(o);
             return Ok(string.Format("Owner inserted.\r\n{0} {1} {2}", o.FirstName, o.LastName, o.DOB));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -86,9 +86,9 @@ public class VehicleOwnerController : ControllerBase
             await _ownerService.DeleteOwnerAsync(id);
             return Ok("Owner is deleted");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -105,9 +105,9 @@ public class VehicleOwnerController : ControllerBase
                 "New data: {0}\t{1}",
                 UpdOwner.FirstName, UpdOwner.LastName));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 public class Logger : ILogger
 {
-    public IDisposable? BeginScope<TState>(TState state) => null;
+    IDisposable? ILogger.BeginScope<TState>(TState state) => null;
 
     public bool IsEnabled(LogLevel logLevel) => logLevel <= LogLevel.Information;
 

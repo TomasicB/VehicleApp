@@ -24,9 +24,9 @@ public class VehicleEngineController : ControllerBase
             var engine = await _engineService.GetEngineAsync();
             return Ok(engine);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -38,9 +38,9 @@ public class VehicleEngineController : ControllerBase
             var engine = await _engineService.GetEngineByIdAsync(id);
             return Ok(engine);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -52,9 +52,9 @@ public class VehicleEngineController : ControllerBase
             var engine = await _engineService.GetEngineByNameAsync(type);
             return Ok(engine);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 }

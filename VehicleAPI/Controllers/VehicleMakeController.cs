@@ -24,9 +24,9 @@ public class VehicleMakeController : ControllerBase
             var make = await _makeService.GetMakeAsync();
             return Ok(make);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -38,9 +38,9 @@ public class VehicleMakeController : ControllerBase
             var make = await _makeService.GetMakeByIdAsync(id);
             return Ok(make);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -52,9 +52,9 @@ public class VehicleMakeController : ControllerBase
             var make = await _makeService.GetMakesByNameAsync(name);
             return Ok(make);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -69,9 +69,9 @@ public class VehicleMakeController : ControllerBase
             await _makeService.InsertMakeAsync(m);
             return Ok(string.Format("Make inserted. {0}", m.Name));
         }
-        catch (Exception) 
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
 
     }
@@ -87,9 +87,9 @@ public class VehicleMakeController : ControllerBase
             await _makeService.DeleteMakeAsync(id);
             return Ok("Make is deleted");
         }
-        catch (Exception) 
-        { 
-            throw; 
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -103,9 +103,9 @@ public class VehicleMakeController : ControllerBase
             await _makeService.UpdateMakeAsync(id, UpdMake);
             return Ok(string.Format("Make data updated.\r\nNew make name {0}", UpdMake.Name));
         }
-        catch (Exception)
+        catch (Exception ex )
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 }

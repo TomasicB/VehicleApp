@@ -25,9 +25,9 @@ public class VehicleModelController : ControllerBase
             var model = await _modelService.GetModelsAsync();
             return Ok(model);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -39,9 +39,9 @@ public class VehicleModelController : ControllerBase
             var model = await _modelService.GetModelByIdAsync(id);
             return Ok(model);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -53,9 +53,9 @@ public class VehicleModelController : ControllerBase
             var model = await _modelService.GetModelsByNameAsync(name);
             return Ok(model);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -67,9 +67,9 @@ public class VehicleModelController : ControllerBase
             var model = await _modelService.GetModelsByMakeAsync(make);
             return Ok(model);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -88,9 +88,9 @@ public class VehicleModelController : ControllerBase
             await _modelService.InsertModelAsync(m, makeid);
             return Ok(string.Format("Model inserted. ({1}){0}", m.Name, m.Name));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -105,9 +105,9 @@ public class VehicleModelController : ControllerBase
             await _modelService.DeleteModelAsync(id);
             return Ok("Model is deleted");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -122,9 +122,9 @@ public class VehicleModelController : ControllerBase
             await _modelService.UpdateModelAsync(id, UpdModel);
             return Ok(string.Format("Model data updated.\r\nNew model name {0}", UpdModel.Name));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 }

@@ -25,9 +25,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationsAsync();
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -39,9 +39,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationByIdAsync(id);
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -53,9 +53,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationByNumberAsync(number);
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -67,9 +67,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationsByEngineAsync(engine);
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -81,9 +81,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationsByModelAsync(model);
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -95,9 +95,9 @@ public class VehicleRegistrationController : ControllerBase
             var registration = await _regService.GetRegistrationsByOwnerAsync(owner);
             return Ok(registration);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -121,9 +121,9 @@ public class VehicleRegistrationController : ControllerBase
             await _regService.InsertRegistrationAsync(r, ModelId, EngineId, OwnerId);
             return Ok(string.Format("Registration inserted. {0}", r.RegistrationNumber));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -138,9 +138,9 @@ public class VehicleRegistrationController : ControllerBase
             await _regService.DeleteRegistrationAsync(id);
             return Ok("Registration is deleted");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 
@@ -155,9 +155,9 @@ public class VehicleRegistrationController : ControllerBase
             await _regService.UpdateRegistrationAsync(id, UpdRegistration);
             return Ok(string.Format("Registration data updated.\r\nNew Registration noumber {0}", UpdRegistration.RegistrationNumber));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw new ApplicationException("Something went wrong", ex);
         }
     }
 }
