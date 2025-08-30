@@ -1,55 +1,79 @@
-﻿using FluentAssertions;
-using NSubstitute;
+﻿using AutoMapper;
+using FluentAssertions;
+using Moq;
+using MockQueryable.Moq;
 using Vehicle.DAL.Context;
-using Vehicle.Models.Common;
+using Vehicle.DAL.Entities;
 using Vehicle.Models.DTOs;
-using Vehicle.Repository.Common;
 using Xunit;
 
-namespace Project.Repository.Tests.Repositories;
-
-public class VehicleEngineRepositoryTests
+namespace Vehicle.Repository.Tests
 {
-    private readonly IVehicleEngineRepository _repoMock;
-    private readonly VehicleEngineDTO _engine = new VehicleEngineDTO { Type = "Hybrid", Abrv = "H" };
-
-    public VehicleEngineRepositoryTests()
+    public class VehicleEngineRepositoryTests
     {
-        _repoMock = Substitute.For<IVehicleEngineRepository>();
-    }
+        private readonly Mock<IVehicleDbContext> _mockDbContext;
+        private readonly IMapper _mapper;
+        private readonly List<VehicleEngine> _engineData;
 
-    [Fact]
-    public async Task GetEngineAsync_Should_ReturnData()
-    {
-        IEnumerable<IVehicleEngine> result = await _repoMock.GetEngineAsync();
-        result.Should().NotBeEmpty();
-    }
+        public VehicleEngineRepositoryTests()
+        {
+            _mockDbContext = new Mock<IVehicleDbContext>();
 
-    [Fact]
-    public async Task GetEngineByIdAsync_ReturnsData()
-    {
-        IEnumerable<IVehicleEngine> engine = await _repoMock.GetEngineByIdAsync(1);
-        engine.Should().NotBeEmpty();
-    }
+            _engineData = new List<VehicleEngine>
+            {
+                new VehicleEngine { Id = 1, Type = "Petrol", Abrv = "P"},
+                new VehicleEngine { Id = 2, Type = "Diesel", Abrv = "D"},
+                new VehicleEngine { Id = 3, Type = "Electric", Abrv = "EV"}
+            };
 
-    [Fact]
-    public async Task GetEngineByIdAsync_ReturnsNull()
-    {
-        IEnumerable<IVehicleEngine> engine = await _repoMock.GetEngineByIdAsync(100);
-        engine.Should().BeNullOrEmpty();
-    }
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<VehicleEngine, VehicleEngineDTO>();
+            });
+            _mapper = config.CreateMapper();
+        }
 
-    [Fact]
-    public async Task GetEngineByNameAsync_ReturnsData()
-    {
-        IEnumerable<IVehicleEngine> engine = await _repoMock.GetEngineByNameAsync("Petrol");
-        engine.Should().NotBeEmpty();
-    }
+        private VehicleEngineRepository CreateRepository()
+        {
+            var mockSet = _engineData.BuildMockDbSet();
+            _mockDbContext.Setup(c => c.VehicleEngine).Returns(mockSet.Object);
 
-    [Fact]
-    public async Task GetEngineByNameAsync_ReturnsNull()
-    {
-        var engine = await _repoMock.GetEngineByNameAsync("x");
-        engine.Should().BeNullOrEmpty();
+            return new VehicleEngineRepository(_mockDbContext.Object, _mapper);
+        }
+
+        [Fact]
+        public async Task GetEngineAsync_ShouldReturnAllEngines()
+        {
+            // Arrange
+            var repo = CreateRepository();
+
+            // Act
+            var result = await repo.GetEngineAsync();
+
+            // Assert
+            result.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public async Task GetEngineByIdAsync_ShouldReturnMatchingEngine()
+        {
+            var repo = CreateRepository();
+
+            var result = await repo.GetEngineByIdAsync(2);
+
+            result.Should().ContainSingle(e => e.Type == "Diesel");
+        }
+
+        [Fact]
+        public async Task GetEngineByNameAsync_ShouldReturnMatchingEngines_ByTypeOrAbrv()
+        {
+            var repo = CreateRepository();
+
+            var result1 = await repo.GetEngineByNameAsync("Petrol");
+            var result2 = await repo.GetEngineByNameAsync("EV");
+
+            result1.Should().ContainSingle(e => e.Type == "Petrol");
+            result2.Should().ContainSingle(e => e.Abrv == "EV");
+        }
     }
 }

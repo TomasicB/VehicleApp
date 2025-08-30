@@ -8,5 +8,5 @@ public class VehicleMake
 
     public string Abrv { get; set; } = string.Empty;
 
-    public ICollection<VehicleModel>? VehicleModels { get; }
+    public ICollection<VehicleModel>? VehicleModels { get; } = new List<VehicleModel>();
 }
