@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
-import { getOwners, setParams } from "../../store/ownersSlice";
-import { saveFilters, loadFilters } from "../../utils/filterState";
+import { setParams } from "../../store/ownersSlice";
+import { loadFilters } from "../../utils/filterState";
 import SortableTh from "../../components/SortableTh";
 import ListBar from "../../components/ListBar";
 import { Link } from "react-router-dom";
 import type { VehicleOwner } from "../../types/index";
+import axios from "axios";
 
 const KEY = "owners";
 
@@ -24,12 +25,20 @@ export default function OwnersList() {
     dispatch(setParams(restored));
   }, []); 
 
+
+const [items, setItems] = useState<any[]>([]);
+const http = axios.create({
+  baseURL: "https://localhost:44311",
+  timeout: 15000,
+  withCredentials: false,
+});
+
   useEffect(() => {
-    const ctrl = new AbortController();
-    dispatch(getOwners({ ...filters }));
-    saveFilters(KEY, filters);
-    return () => ctrl.abort();
-  }, [dispatch, filters]);
+	http.get("/api/VehicleOwner")
+		.then(r => setItems(r.data))
+		.catch(console.error);
+  }, []); 
+
 
   const onSort = (sort: string) => dispatch(setParams({ sort }));
   const onQChange = (q: string) => dispatch(setParams({ q, page: 1 }));
@@ -48,7 +57,7 @@ export default function OwnersList() {
         onPageChange={onPageChange}
       />
 
-      <Link to="./owners/new">
+      <Link to="./new">
         <button>New Vehicle Owner</button>
       </Link>
 
@@ -64,11 +73,16 @@ export default function OwnersList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((owner: VehicleOwner) => (
+            {items.map((owner: VehicleOwner) => (
 			  <tr key={owner.id}>
 				<td key={owner.firstName}>{owner.firstName}</td>
 				<td key={owner.lastName}>{owner.lastName}</td>
 				<td key={owner.DOB}>{owner.DOB}</td>
+				<td>
+				  <Link to={"./${owner.id}"}>
+					<button>Edit</button>
+				  </Link>
+				</td>
 			  </tr>
 			))}
           </tbody>

@@ -1,11 +1,11 @@
 import axios from 'axios';
 import type { VehicleOwner, ListParams } from '../../types';
 
-const BASE_URL = 'http://localhost:44311/api/vehicleowner';
+const BASE_URL = 'https://localhost:44311/api/VehicleOwner';
 
 export const getVehicleOwners = async (params: ListParams) => {
   const response = await axios.get(BASE_URL, { params });
-  return response.data; // Expected format: { items: VehicleOwner[], total: number }
+  return response.data;
 };
 
 export const createVehicleOwner = (data: VehicleOwner) => axios.post(BASE_URL, data);

@@ -1,5 +1,7 @@
 import { api } from "./axios";
 
+export const http = api
+
 export async function get<T>(url: string, params?: unknown, signal?: AbortSignal) {
   const res = await api.get<T>(url, { params, signal });
   return res.data;

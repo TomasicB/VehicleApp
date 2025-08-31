@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { VehicleApi } from "../../api/vehicleService";
+import { http } from "../../api/http";
 
 export default function OwnerEdit() {
   const { id } = useParams<{ id: string }>();
@@ -26,9 +27,9 @@ export default function OwnerEdit() {
 
   const save = async () => {
     if (isNew) {
-      await VehicleApi.createOwner({ firstName, lastName, DOB });
+      await http.post("/VehicleOwner", { firstName, lastName, DOB });
     } else if (id) {
-      await VehicleApi.updateOwner(Number(id), { firstName, lastName, DOB});
+      await http.put("/VehicleOwner", { id, firstName, lastName, DOB});
     }
     nav("/owners");
   };
@@ -47,7 +48,7 @@ export default function OwnerEdit() {
       <label>Last Name<input value={lastName} onChange={(e) => setLastName(e.target.value)}/></label>
       <label>DOB<input value={DOB} onChange={(e) => setDOB(e.target.value)}/></label>
       <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <button disabled={loading} onClick={save}>Save</button> 
+        <button disabled={!loading} onClick={save}>Save</button> 
         {!isNew && <button onClick={remove}>Delete</button>}
         <button onClick={() => nav(-1)}>Cancel</button>
       </div>

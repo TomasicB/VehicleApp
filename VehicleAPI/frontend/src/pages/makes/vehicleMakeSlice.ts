@@ -50,7 +50,7 @@ const vehicleMakeSlice = createSlice({
         state.data = action.payload.items;
         state.total = action.payload.total;
       });
-  }
+    }
 });
 
 export const { setFilters } = vehicleMakeSlice.actions;

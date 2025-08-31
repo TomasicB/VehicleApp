@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { VehicleMake, ListParams } from '../../types';
 
-const BASE_URL = 'http://localhost:44311/api/vehiclemake';
+const BASE_URL = 'https://localhost:44311/api/VehicleMake';
 
 export const getVehicleMakes = async (params: ListParams) => {
   const response = await axios.get(BASE_URL, { params });

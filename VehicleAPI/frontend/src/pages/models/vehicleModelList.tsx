@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
-import { getModels, setParams } from "../../store/modelsSlice";
-import { saveFilters, loadFilters } from "../../utils/filterState";
+import { setParams } from "../../store/modelsSlice";
+import { loadFilters } from "../../utils/filterState";
 import SortableTh from "../../components/SortableTh";
 import ListBar from "../../components/ListBar";
 import { Link } from "react-router-dom"; 
 import type {VehicleModel } from "../../types/index";
+import axios from "axios";
 
 const KEY = "models";
 
@@ -24,12 +25,19 @@ export default function ModelsList() {
     dispatch(setParams(restored));
   }, []); 
 
+
+const [items, setItems] = useState<any[]>([]);
+const http = axios.create({
+  baseURL: "https://localhost:44311",
+  timeout: 15000,
+  withCredentials: false,
+});
+
   useEffect(() => {
-    const ctrl = new AbortController();
-    dispatch(getModels({ ...filters }));
-    saveFilters(KEY, filters);
-    return () => ctrl.abort();
-  }, [dispatch, filters]); 
+	http.get("/api/VehicleModel")
+		.then(r => setItems(r.data))
+		.catch(console.error);
+  }, []); 
 
   const onSort = (sort: string) => dispatch(setParams({ sort }));
   const onQChange = (q: string) => dispatch(setParams({ q, page: 1 }));
@@ -48,7 +56,7 @@ export default function ModelsList() {
         onPageChange={onPageChange}
       />
 
-      <Link to="./models/new">
+      <Link to="./new">
         <button>New Vehicle Model</button>
       </Link>
 
@@ -65,13 +73,13 @@ export default function ModelsList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((model: VehicleModel) => (
+            {items.map((model: VehicleModel) => (
               <tr key={model.id}>
                 <td key={model.name}>{model.name}</td>
                 <td key={model.abrv}>{model.abrv}</td>
                 <td key={model.makeId}>{model.makeId}</td>
                 <td>
-                  <Link to={"./models/${model.id}"}>
+                  <Link to={"./${model.id}"}>
                     <button>Edit</button>
                   </Link>
                 </td>

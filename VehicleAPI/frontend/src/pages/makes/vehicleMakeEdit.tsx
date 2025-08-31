@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { VehicleApi } from "../../api/vehicleService";
+import { http } from "../../api/http";
 
 export default function MakeEdit() {
   const { id } = useParams<{ id: string }>();
@@ -22,9 +23,9 @@ export default function MakeEdit() {
 
   const save = async () => {
     if (isNew) {
-      await VehicleApi.createMake({ name });
+      await http.post("/VehicleMake", { name });
     } else if (id) {
-      await VehicleApi.updateMake(Number(id), { name });
+        await http.put("/VehicleMake", { id, name });
     }
     nav("/makes");
   };
@@ -41,7 +42,7 @@ export default function MakeEdit() {
       <h2>{isNew ? "New Make" : "Edit Make"}</h2>
       <label>Name<input value={name} onChange={(e) => setName(e.target.value)}/></label>
       <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <button disabled={loading} onClick={save}>Save</button> 
+        <button disabled={!loading} onClick={save}>Save</button> 
         {!isNew && <button onClick={remove}>Delete</button>}
         <button onClick={() => nav(-1)}>Cancel</button>
       </div>

@@ -30,7 +30,8 @@ export function useVehicleMake(options?: UseVehicleMakeOptions) {
     setError(null);
     try {
       localStorage.setItem('vehicleMakeFilters', JSON.stringify(filters));
-      const response = await getVehicleMakes(filters);
+        const response = await getVehicleMakes(filters);
+        console.log(response);
       setData(response.items);
       setTotal(response.total);
     } catch (err: any) {
@@ -41,8 +42,8 @@ export function useVehicleMake(options?: UseVehicleMakeOptions) {
   }, [filters]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+      loadData();
+  }, []);
 
   const create = async (make: VehicleMake) => {
     await createVehicleMake(make);

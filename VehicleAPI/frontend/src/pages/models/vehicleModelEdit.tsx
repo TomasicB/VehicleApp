@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { VehicleApi } from "../../api/vehicleService";
+import { http } from "../../api/http";
 
 export default function ModelEdit() {
   const { id } = useParams<{ id: string }>();
@@ -23,9 +24,9 @@ export default function ModelEdit() {
 
   const save = async () => {
     if (isNew) {
-      await VehicleApi.createModel({ name, makeId });
+      await http.post("/VehicleModel", { name, makeId });
     } else if (id) {
-      await VehicleApi.updateModel(Number(id), { name, makeId});
+        await http.put("/VehicleModel", { id, name, VehicleMakeId: makeId});
     }
     nav("/models");
   };
@@ -43,7 +44,7 @@ export default function ModelEdit() {
       <label>Name<input value={name} onChange={(e) => setName(e.target.value)}/></label>
       <label>Make ID<input value={makeId} onChange={(e) => setMakeId(Number(e.target.value))}/></label>
       <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <button disabled={loading} onClick={save}>Save</button> 
+        <button disabled={!loading} onClick={save}>Save</button> 
         {!isNew && <button onClick={remove}>Delete</button>}
         <button onClick={() => nav(-1)}>Cancel</button>
       </div>

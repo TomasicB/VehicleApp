@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
-import { getMakes, setParams } from "../../store/makesSlice";
-import { saveFilters, loadFilters } from "../../utils/filterState";
+import { setParams } from "../../store/makesSlice";
+import { loadFilters } from "../../utils/filterState";
 import SortableTh from "../../components/SortableTh";
 import ListBar from "../../components/ListBar";
 import { Link } from "react-router-dom"; 
 import type { VehicleMake } from "../../types/index";
+import axios from "axios";
 
 const KEY = "makes";
 
@@ -24,12 +25,18 @@ export default function MakesList() {
     dispatch(setParams(restored));
   }, []); 
 
+const [items, setItems] = useState<any[]>([]);
+const http = axios.create({
+  baseURL: "https://localhost:44311",
+  timeout: 15000,
+  withCredentials: false,
+});
+
   useEffect(() => {
-    const ctrl = new AbortController();
-    dispatch(getMakes({ ...filters }));
-    saveFilters(KEY, filters);
-    return () => ctrl.abort();
-  }, [dispatch, filters]); 
+	http.get("/api/VehicleMake")
+		.then(r => setItems(r.data))
+		.catch(console.error);
+  }, []); 
 
   const onSort = (sort: string) => dispatch(setParams({ sort }));
   const onQChange = (q: string) => dispatch(setParams({ q, page: 1 }));
@@ -48,7 +55,7 @@ export default function MakesList() {
         onPageChange={onPageChange}
       />
 
-      <Link to="./makes/new">
+      <Link to="./new">
         <button>New Vehicle Make</button>
       </Link>
 
@@ -64,12 +71,12 @@ export default function MakesList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((make: VehicleMake) => (
+            {items.map((make: VehicleMake) => (
               <tr key={make.id}>
                 <td key={make.name}>{make.name}</td>
                 <td key={make.abrv}>{make.abrv}</td>
                 <td>
-                  <Link to={"./makes/${make.id}"}>
+                  <Link to={"./${make.id}"}>
                     <button>Edit</button>
                   </Link>
                 </td>

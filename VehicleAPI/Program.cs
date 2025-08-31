@@ -12,6 +12,10 @@ using Vehicle.Service;
 using Vehicle.Service.Common;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.WebHost.UseUrls("https://localhost:5252");
 builder.Services.AddProblemDetails(configure =>
 {
@@ -55,6 +59,7 @@ builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 builder.Services.AddDbContext<VehicleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(typeof(Program));
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalFrontend", policy =>
@@ -69,6 +74,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Vehicle API V1");
+    options.RoutePrefix = "swagger"; // Access it at /swagger
+});
 
 app.UseCors("AllowFrontend");
 app.UseDefaultFiles();
